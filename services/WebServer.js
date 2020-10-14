@@ -11,7 +11,7 @@ function initialize() {
         app.use(morgan('combined'))
         httpServer = http.createServer(app);
         app.get('/', (req, res) => {
-            res.end('Hello World OCI, yay!');
+            res.end('Now the true battle begins');
         });
         httpServer.listen(config.port)
             .on('listening', () => {
