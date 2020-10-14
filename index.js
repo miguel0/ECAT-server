@@ -5,13 +5,14 @@ const database = require('./services/Database.js');
 process.env.UV_THREADPOOL_SIZE = dbConfig.pool.poolMax + 4;
 
 async function startup() {
-    console.log('Initializing database connection...');
+    
+    /*console.log('Initializing database connection...');
     try {
         await database.initialize();
     } catch(err) {
         console.log('Failed to connect', err);
         process.exit(-1);
-    }
+    }*/
 
 
     console.log('Initializing web server....');
@@ -26,13 +27,13 @@ async function startup() {
 
 async function shutdown(e) {
     let err = e;
-    console.log('Shutting down db connection...');
+    /*console.log('Shutting down db connection...');
     try { 
         await database.close();
     } catch(e) {
         err = err || e;
         console.log('Failed to close db connection', e);
-    }
+    }*/
     console.log('Bye, bi...');
     try {
         await webServer.close();
