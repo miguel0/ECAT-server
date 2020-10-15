@@ -2,7 +2,7 @@ const http = require('http');
 const express = require('express')
 const config = require('../config/WebServer.js');
 const morgan = require('morgan');
-const auth = require('../src/auth/auth');
+//const auth = require('../src/auth/auth');
 
 // Routes
 const parts = require('../src/part/route');
@@ -16,8 +16,8 @@ function initialize() {
     return new Promise((resolve, reject) => {
         app = express();
         app.use(morgan('combined'))
+        app.use(express.json());
         httpServer = http.createServer(app);
-        auth.initializeApp();
         registerRoutes();
         httpServer.listen(config.port)
             .on('listening', () => {

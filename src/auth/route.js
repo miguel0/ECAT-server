@@ -1,15 +1,9 @@
 const express = require('express');
 const router = express.Router();
-//const controller = require('./authController');
-const admin = require('./auth.js');
+const auth = require('./auth');
 
-router.get('/', async function(req, res, next) {
-    const user = await admin.auth().createUser({
-        email: 'viczaz99@hotmail.com',
-        password: 'Jojos#00'
-      });
-  
-      return res.send(user);
+router.post('/user', async function(req, res) {
+  auth.createUser(req, res);
 });
 
 module.exports = router;

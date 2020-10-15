@@ -1,8 +1,21 @@
 const admin = require('firebase-admin');
 
 admin.initializeApp(
-  admin.credential.applicationDefault(),
-  'https://aklhqlazpqyucjk-ecatdb.adb.us-ashburn-1.oraclecloudapps.com/ords/admin/_sdw/'
+  {
+    credential: admin.credential.applicationDefault()
+  }
 );
 
-module.exports = admin;
+async function createUser(req, res) {
+  const {email, password} = req.body;
+
+  user = await admin.auth().createUser({
+    email: email, 
+    password: password
+  });
+
+  res.send(user);
+}
+
+module.exports.admin = admin;
+module.exports.createUser = createUser;
