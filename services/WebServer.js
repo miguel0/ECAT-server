@@ -2,10 +2,12 @@ const http = require('http');
 const express = require('express')
 const config = require('../config/WebServer.js');
 const morgan = require('morgan');
+const auth = require('../src/auth/auth');
 
 // Routes
 const parts = require('../src/part/route');
 const components = require('../src/component/route');
+const auth_route = require('../src/auth/route');
 
 let app;
 let httpServer;
@@ -15,6 +17,7 @@ function initialize() {
         app = express();
         app.use(morgan('combined'))
         httpServer = http.createServer(app);
+        auth.initializeApp();
         registerRoutes();
         httpServer.listen(config.port)
             .on('listening', () => {
@@ -50,6 +53,7 @@ function registerRoutes() {
     // Register imported routes.
     app.use('/parts', parts);
     app.use('/components', components);
+    app.use('/auth', auth_route);
 }
 
 module.exports.initialize = initialize;
