@@ -1,18 +1,21 @@
 const http = require('http');
 const express = require('express')
 const config = require('../config/WebServer.js');
-const morgan = require('morgan')
+const morgan = require('morgan');
 
-let hrrpServer;
+// Routes
+const parts = require('../src/part/route');
+const components = require('../src/component/route');
+
+let app;
+let httpServer;
 
 function initialize() {
     return new Promise((resolve, reject) => {
-        const app = express();
+        app = express();
         app.use(morgan('combined'))
         httpServer = http.createServer(app);
-        app.get('/', (req, res) => {
-            res.end('Now the true battle begins');
-        });
+        registerRoutes();
         httpServer.listen(config.port)
             .on('listening', () => {
                 console.log('Web server on, listening on port: ' +  config.port);
@@ -36,6 +39,17 @@ function close() {
             resolve();
         })
     })
+}
+
+function registerRoutes() {
+    // Root
+    app.get('/', (req, res) => {
+        res.end('Welcome to ECAT server');
+    });
+
+    // Register imported routes.
+    app.use('/parts', parts);
+    app.use('/components', components);
 }
 
 module.exports.initialize = initialize;
