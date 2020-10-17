@@ -1,8 +1,8 @@
 module.exports = {
     pool: {
-        user: process.env.ORACLE_USER,
-        password: process.env.ORACLE_PWD,
-        connectionString: process.env.ORACLE_CONNECTION,
+        user: process.env.ORCL_USER,
+        password: process.env.ORCL_PWD,
+        connectString: process.env.ORCL_CONN,
         poolMin: 10,
         poolMax: 10,
         poolIncrement: 0

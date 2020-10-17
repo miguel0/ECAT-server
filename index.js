@@ -1,18 +1,23 @@
 const webServer = require('./services/WebServer.js')
 const dbConfig = require('./config/Database.js');
-const database = require('./services/Database.js');
+//const database = require('./services/Database.js');
+const reflect = require('reflect-metadata');
+const {createConnection} = require('typeorm')
+
 
 process.env.UV_THREADPOOL_SIZE = dbConfig.pool.poolMax + 4;
 
 async function startup() {
     
-    /*console.log('Initializing database connection...');
+    //await createConnection();
+    //console.log("Database connection created!!");
+    console.log('Initializing database connection...');
     try {
         await database.initialize();
     } catch(err) {
         console.log('Failed to connect', err);
         process.exit(-1);
-    }*/
+    }
 
 
     console.log('Initializing web server....');

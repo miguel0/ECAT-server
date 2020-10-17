@@ -2,12 +2,11 @@ const http = require('http');
 const express = require('express')
 const config = require('../config/WebServer.js');
 const morgan = require('morgan');
-//const auth = require('../src/auth/auth');
 
 // Routes
-const parts = require('../src/part/route');
-const components = require('../src/component/route');
-const auth_route = require('../src/auth/route');
+const parts = require('../src/part/part.route');
+const components = require('../src/component/component.route');
+const auth_route = require('../src/auth/auth.route');
 
 let app;
 let httpServer;

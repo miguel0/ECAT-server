@@ -17,5 +17,7 @@ async function createUser(req, res) {
   res.send(user);
 }
 
+
+
 module.exports.admin = admin;
 module.exports.createUser = createUser;
