@@ -1,12 +1,11 @@
 // part.route.js
+import * as express from 'express';
+import { getAllParts } from './part.controller';
 
-const express = require('express');
 const router = express.Router();
-const {test, getAllFighters} = require('./part.controller');
 
 // PREFIX: /parts
 
-router.get('/', test);
-router.get('/many', getAllFighters);
+router.get('/', getAllParts);
 
-module.exports = router;
+export default router;

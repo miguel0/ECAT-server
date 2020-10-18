@@ -1,18 +1,16 @@
-const webServer = require('./services/WebServer.js')
-const dbConfig = require('./config/Database.js');
-const database = require('./services/Database.js');
+import * as webServer from './services/WebServer';
+import * as dbConfig from './config/Database.js';
+import * as database from './services/Database.js';
 
 process.env.UV_THREADPOOL_SIZE = dbConfig.pool.poolMax + 4;
 
 async function startup() {
-    
-    //await createConnection();
-    //console.log("Database connection created!!");
+
     console.log('Initializing database connection...');
     try {
         await database.initialize();
     } catch(err) {
-        console.log('Failed to connect', err);
+        console.log('Failed to connect uwu', err);
         process.exit(-1);
     }
 

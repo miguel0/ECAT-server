@@ -1,8 +1,7 @@
-const express = require('express');
+import express from 'express';
+import { getAllComponents } from './component.controller';
 const router = express.Router();
 
-router.get('/', function(req, res, next) {
-    res.end('did this update?!!!');
-});
+router.get('/', getAllComponents);
 
-module.exports = router;
+export default router;

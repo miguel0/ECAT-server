@@ -1,30 +1,22 @@
 //part.controller.js
-const {name: fighter} = require('../entities/fighter');
-const {getRepository} = require('typeorm');
+import {getRepository} from 'typeorm';
+import oracle from 'oracledb';
+import { Part } from './part.entity';
 
-async function test(req, res) {
+export async function getAllParts(req, res) {
+    const repo = getRepository(Part);
+    const parts = await repo.find();
+    res.send(parts);
+}
+
+// using plain oracledb
+/*export async function getSomething(req, res) {
     try {
-        let character = await getRepository(fighter)
-            .create(
-                {name: "ZeroSuitSamus", 
-                type: "rushdown"
-            });
-        let results = await getRepository(fighter).save(character);
-        res.send(results);
+        let connection = await oracle.getConnection();
+        let users = await connection.execute('SELECT * FROM SONGS', [], {outFormat: oracle.OUT_FORMAT_OBJECT});
+        console.log(users);
+        res.send(users.rows);
     } catch(err) {
         res.send(err.message);
     }
-    
-}
-
-async function getAllFighters(req, res) {
-    try{
-        let fighters = await getRepository(fighter).find();
-        res.send(fighters);
-    } catch(err) {
-        res.send(err.message);
-    }
-}
-
-module.exports.test = test;
-module.exports.getAllFighters = getAllFighters;
+}*/

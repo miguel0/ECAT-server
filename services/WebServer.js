@@ -1,26 +1,26 @@
-const http = require('http');
-const express = require('express')
-const config = require('../config/WebServer.js');
-const morgan = require('morgan');
+import http from 'http';
+import express from 'express';
+import config from '../config/WebServer.js';
+import morgan from 'morgan';
 
 // Routes
-const parts = require('../src/part/part.route');
-const components = require('../src/component/component.route');
-const auth_route = require('../src/auth/auth.route');
+import parts from '../src/part/part.route';
+import components from '../src/component/component.route';
+import auth_route from '../src/auth/auth.route';
 
 let app;
 let httpServer;
 
-function initialize() {
+export function initialize() {
     return new Promise((resolve, reject) => {
         app = express();
         app.use(morgan('combined'))
         app.use(express.json());
         httpServer = http.createServer(app);
         registerRoutes();
-        httpServer.listen(config.port)
+        httpServer.listen(config)
             .on('listening', () => {
-                console.log('Web server on, listening on port: ' +  config.port);
+                console.log('Web server on, listening on port: ' +  config);
                 resolve();
             })
             .on('error', (error) => {
@@ -30,7 +30,7 @@ function initialize() {
     })
 }
 
-function close() {
+export function close() {
     return new Promise((resolve, reject) => {
         httpServer.close((err) => {
             if(err){
@@ -54,6 +54,3 @@ function registerRoutes() {
     app.use('/components', components);
     app.use('/auth', auth_route);
 }
-
-module.exports.initialize = initialize;
-module.exports.close = close;

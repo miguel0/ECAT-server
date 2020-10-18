@@ -1,4 +1,4 @@
-const admin = require('firebase-admin');
+import admin from 'firebase-admin';
 
 admin.initializeApp(
   {
@@ -6,7 +6,7 @@ admin.initializeApp(
   }
 );
 
-async function createUser(req, res) {
+export async function createUser(req, res) {
   const {email, password} = req.body;
 
   user = await admin.auth().createUser({
@@ -16,8 +16,4 @@ async function createUser(req, res) {
 
   res.send(user);
 }
-
-
-
-module.exports.admin = admin;
-module.exports.createUser = createUser;
+export {admin};

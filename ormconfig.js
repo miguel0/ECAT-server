@@ -1,15 +1,13 @@
-const typeorm = require('typeorm');
-const EntitySchema = typeorm.EntitySchema;
+const { Component } = require("./src/component/component.entity");
+const { Part } = require("./src/part/part.entity");
 
 module.exports = {
     type: "oracle",
     username: process.env.ORCL_USERNAME,
-    password: ORCL_PASSWORD,
-    connectString: ORCL_CONNECT_STRING,
+    password: process.env.ORCL_PASSWORD,
+    connectString: process.env.ORCL_CONN,
     entities: [
-        new EntitySchema(require('./src/entities/fighter'))
-    ],
-    synchronize: false
-    
-
+        Part,
+        Component
+    ]
 }
