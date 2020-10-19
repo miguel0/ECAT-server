@@ -7,13 +7,18 @@ admin.initializeApp(
 );
 
 export async function createUser(req, res) {
-  const {email, password} = req.body;
+  try {
+    const {email, password} = req.body;
 
-  user = await admin.auth().createUser({
-    email: email, 
-    password: password
-  });
+    user = await admin.auth().createUser({
+      email: email, 
+      password: password
+    });
 
-  res.send(user);
+    res.send(user);
+  } catch(err) {
+    res.send(err.message);
+  }
+  
 }
 export {admin};
