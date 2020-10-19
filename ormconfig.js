@@ -1,5 +1,6 @@
 const { Component } = require("./src/component/component.entity");
 const { Part } = require("./src/part/part.entity");
+const { User } = require("./src/user/user.entity");
 
 module.exports = {
     type: "oracle",
@@ -8,6 +9,7 @@ module.exports = {
     connectString: process.env.ORCL_CONN,
     entities: [
         Part,
-        Component
+        Component,
+        User
     ]
 }

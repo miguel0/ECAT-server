@@ -7,6 +7,7 @@ import morgan from 'morgan';
 import parts from '../src/part/part.route';
 import components from '../src/component/component.route';
 import auth_route from '../src/auth/auth.route';
+import users from '../src/user/user.route';
 
 let app;
 let httpServer;
@@ -53,4 +54,5 @@ function registerRoutes() {
     app.use('/parts', parts);
     app.use('/components', components);
     app.use('/auth', auth_route);
+    app.use('/users', users);
 }
