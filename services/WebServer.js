@@ -2,6 +2,7 @@ import http from 'http';
 import express from 'express';
 import config from '../config/WebServer.js';
 import morgan from 'morgan';
+import cors from 'cors';
 
 // Routes
 import parts from '../src/part/part.route';
@@ -15,6 +16,7 @@ let httpServer;
 export function initialize() {
     return new Promise((resolve, reject) => {
         app = express();
+        app.use(cors());
         app.use(morgan('combined'))
         app.use(express.json());
         httpServer = http.createServer(app);

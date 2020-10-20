@@ -5,12 +5,14 @@ import { User } from './user.entity';
 
 const router = express.Router();
 
-router.get('/', async (req, res) => {
+router.get('/', async (req, res, next) => {
     try {
+        //return res.status(400).json({message: "Something happened..."});
         const repo = getRepository(User);
         const users = await repo.find();
         res.send(users);
     } catch(err) {
+        console.log("error here!!");
         res.send(err.message);
     }
     
