@@ -1,6 +1,5 @@
 //part.controller.js
 import {getRepository} from 'typeorm';
-import oracle from 'oracledb';
 import { Part } from './part.entity';
 
 export async function getAllParts(req, res) {

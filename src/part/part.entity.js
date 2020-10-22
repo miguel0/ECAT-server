@@ -1,13 +1,13 @@
 import {Entity, Column, PrimaryColumn} from "typeorm";
 
-@Entity()
+@Entity('PART')
 export class Part {
     
-    @PrimaryColumn('varchar') id;
-    @Column('varchar') name;
-    @Column('varchar') chName;
-    @Column('varchar') spName;
-    @Column('varchar') otherName;
-    @Column('varchar') imageURL;
+    @PrimaryColumn({name: 'ID', type: 'varchar2'}) id;
+    @Column({name: 'NAME', type: 'varchar2'}) name;
+    @Column({name: 'CHNAME', type: 'varchar2'}) chName;
+    @Column({name: 'SPNAME', type: 'varchar2'}) spName;
+    @Column({name: 'OTHERNAME', type: 'varchar2'}) otherName;
+    @Column({name: 'IMAGEURL', type: 'varchar2'}) imageURL;
 
 }
