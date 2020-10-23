@@ -1,6 +1,9 @@
 const { Component } = require("./src/component/component.entity");
+const { Group } = require("./src/group/group.entity");
 const { Part } = require("./src/part/part.entity");
+const { VehicleGroup } = require("./src/relationships/vehicle-group");
 const { User } = require("./src/user/user.entity");
+const { Vehicle } = require("./src/vehicle/vehicle.entity");
 
 module.exports = {
     type: "oracle",
@@ -10,6 +13,9 @@ module.exports = {
     entities: [
         Part,
         Component,
-        User
+        User,
+        Vehicle,
+        Group,
+        VehicleGroup
     ]
 }
