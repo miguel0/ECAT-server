@@ -4,6 +4,7 @@ import { Vehicle } from './vehicle.entity';
 
 export async function getVehicle(req, res) {
     try {
+        //return res.status(400).json({message: "Something happened..."});
         let id = req.params.id;
         const repo = getRepository(Vehicle);
         const vehicle = await repo.findOneOrFail({id: id}, {relations: ['vehicleGroups', 'vehicleGroups.group']});
@@ -14,6 +15,16 @@ export async function getVehicle(req, res) {
         res.end(err.message);
     }
     
+}
+
+export async function getAllVehicles(req, res) {
+    try {
+        const repo = getRepository(Vehicle);
+        const vehicles = await repo.find();
+        res.send(vehicles);
+    } catch(err) {
+        res.end(err.message);
+    }
 }
 
 function getPrettyGroups(vehicleGroups) {

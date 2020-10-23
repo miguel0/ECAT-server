@@ -1,4 +1,5 @@
 import { Column, Entity, JoinColumn, OneToMany, PrimaryColumn, PrimaryGeneratedColumn } from 'typeorm';
+import { GroupComponent } from '../relationships/group-component';
 import { VehicleGroup } from '../relationships/vehicle-group';
 
 @Entity('GRP')
@@ -13,5 +14,8 @@ export class Group {
 
     @OneToMany(() => VehicleGroup, vehicleGroup => vehicleGroup.group)
     vehicleGroups;
+
+    @OneToMany(() => GroupComponent, groupComponent => groupComponent.group)
+    groupComponents;
 
 }
