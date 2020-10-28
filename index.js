@@ -1,6 +1,9 @@
 import * as webServer from './services/WebServer';
 import * as dbConfig from './config/Database.js';
 import * as database from './services/Database.js';
+import dotenv from 'dotenv';
+
+dotenv.config();
 
 process.env.UV_THREADPOOL_SIZE = dbConfig.pool.poolMax + 4;
 
