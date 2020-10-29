@@ -1,5 +1,5 @@
 import {Entity, Column, PrimaryColumn, OneToMany} from "typeorm";
-import { ComponentPart } from "../relationships/component-part";
+import { ComponentPart } from "../relationships/component-part/component-part.entity";
 
 @Entity('PART')
 export class Part {

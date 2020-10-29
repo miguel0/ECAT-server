@@ -1,7 +1,7 @@
 //vehicle.entity.js
 
 import { Column, Entity, OneToMany, PrimaryColumn } from 'typeorm';
-import { VehicleGroup } from '../relationships/vehicle-group';
+import { VehicleGroup } from '../relationships/vehicle-group/vehicle-group.entity';
 
 @Entity('VEHICLE')
 export class Vehicle {

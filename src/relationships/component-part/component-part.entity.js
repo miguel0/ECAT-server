@@ -1,6 +1,6 @@
 import { Entity, PrimaryGeneratedColumn, Column, ManyToOne, JoinColumn} from "typeorm";
-import { Component } from "../component/component.entity";
-import { Part } from "../part/part.entity";
+import { Component } from "../../component/component.entity";
+import { Part } from "../../part/part.entity";
 
 @Entity('COMPONENTPART')
 export class ComponentPart {
