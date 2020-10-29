@@ -10,7 +10,7 @@ export async function getAllParts(req, res) {
 
 export async function getPart(req, res) {
 	try {
-		let id = req.params.id;
+		const id = req.params.id;
 		const repo = getRepository(Part);
 		const part = await repo.findOneOrFail({id: id});
 		res.send(part);
@@ -21,14 +21,17 @@ export async function getPart(req, res) {
 
 export async function editPart(req, res) {
 	try {
-		let part = req.params.part;
+		const id = req.params.id;
 		const repo = getRepository(Part);
-		await repo.update(part.id, {
-			repalceNo: part.repalceNo,
-			name: part.name,
-			chName: part.chName,
-			spName: part.spName,
-			otherName: part.otherName,
+
+		const {repalceNo, name, chName, spName, otherName} = req.body;
+
+		await repo.update(id, {
+			repalceNo: repalceNo,
+			name: name,
+			chName: chName,
+			spName: spName,
+			otherName: otherName,
 		});
 	} catch(err) {
 		res.send(err.message);

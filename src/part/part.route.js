@@ -8,6 +8,6 @@ const router = express.Router();
 
 router.get('/', getAllParts);
 router.get('/:id', getPart);
-router.post('/edit/:part', editPart);
+router.put('/:id', editPart);
 
 export default router;
