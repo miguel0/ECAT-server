@@ -1,7 +1,8 @@
 import express from 'express';
-import { getAllComponents } from './component.controller';
+import { getAllComponents, getComponent } from './component.controller';
 const router = express.Router();
 
 router.get('/', getAllComponents);
+router.get('/:id', getComponent);
 
 export default router;

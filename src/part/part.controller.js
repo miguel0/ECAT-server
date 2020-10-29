@@ -8,14 +8,14 @@ export async function getAllParts(req, res) {
     res.send(parts);
 }
 
-// using plain oracledb
-/*export async function getSomething(req, res) {
+export async function getPart(req, res) {
     try {
-        let connection = await oracle.getConnection();
-        let users = await connection.execute('SELECT * FROM SONGS', [], {outFormat: oracle.OUT_FORMAT_OBJECT});
-        console.log(users);
-        res.send(users.rows);
+        let id = req.params.id;
+        const repo = getRepository(Part);
+        const part = await repo.findOneOrFail({id: id});
+        res.send(part);
     } catch(err) {
         res.send(err.message);
     }
-}*/
+    
+}

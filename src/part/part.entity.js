@@ -1,4 +1,5 @@
-import {Entity, Column, PrimaryColumn} from "typeorm";
+import {Entity, Column, PrimaryColumn, OneToMany} from "typeorm";
+import { ComponentPart } from "../relationships/component-part";
 
 @Entity('PART')
 export class Part {
@@ -9,5 +10,10 @@ export class Part {
     @Column({name: 'SPNAME', type: 'varchar2'}) spName;
     @Column({name: 'OTHERNAME', type: 'varchar2'}) otherName;
     @Column({name: 'IMAGEURL', type: 'varchar2'}) imageURL;
+
+    // Relations
+
+    @OneToMany(() => ComponentPart, componentPart => componentPart.part)
+    componentParts;
 
 }
