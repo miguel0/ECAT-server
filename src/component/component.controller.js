@@ -33,7 +33,8 @@ function getPrettyParts(componentParts) {
     let temp = {};
 
     componentParts.forEach(cp => {
-        temp = cp.part;
+		temp = cp.part;
+		temp.cpid = cp.id;
         temp.localNo = cp.localNo;
         temp.localQty = cp.localQty;
         temp.remark = cp.remark;
