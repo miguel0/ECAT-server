@@ -5,7 +5,7 @@ import { ComponentPart } from "../relationships/component-part/component-part.en
 export class Part {
     
 	@PrimaryColumn({name: 'ID', type: 'varchar2'}) id;
-	@Column({name: 'REPLACEMENTID', type: 'varchar2'}) replacementId;
+	@Column({name: 'REPLACENO', type: 'varchar2'}) replaceNo;
     @Column({name: 'NAME', type: 'varchar2'}) name;
     @Column({name: 'CHNAME', type: 'varchar2'}) chName;
     @Column({name: 'SPNAME', type: 'varchar2'}) spName;

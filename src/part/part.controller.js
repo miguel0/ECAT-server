@@ -24,7 +24,7 @@ export async function editPart(req, res) {
 		let part = req.params.part;
 		const repo = getRepository(Part);
 		await repo.update(part.id, {
-			replacementId: part.replacementId,
+			repalceNo: part.repalceNo,
 			name: part.name,
 			chName: part.chName,
 			spName: part.spName,
