@@ -6,7 +6,8 @@ export async function deleteComponentPart(req, res) {
 		const id = req.params.id;
 		const repo = getRepository(ComponentPart);
 		await repo.delete(id);
+		res.send(true);
 	} catch(err) {
-		console.log(err.message);
+		res.send(err.message);
 	}
 }
