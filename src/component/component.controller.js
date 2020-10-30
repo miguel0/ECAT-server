@@ -33,13 +33,31 @@ function getPrettyParts(componentParts) {
     let temp = {};
 
     componentParts.forEach(cp => {
-        temp = cp.part;
-        temp.localNo = cp.localNo;
+		temp = cp.part;
+		temp.cpid = cp.id;
         temp.localQty = cp.localQty;
-        temp.remark = cp.remark;
+		temp.remark = cp.remark;
+
+		temp.localNo = getLocalNo(cp, componentParts, '');
+
         parts.push(temp);
         temp = {};
     })
 
     return parts;
+}
+
+function getLocalNo(cp, list, localNo) {
+	let tempNo = cp.localNo.toString() + localNo;
+
+	if(cp.componentPartId) {
+		for(let i = 0; i < list.length; i++) {
+			if(list[i].id === cp.componentPartId) {
+				return getLocalNo(list[i], list, '.' + tempNo);
+			}
+		}
+		return tempNo;
+	} else {
+		return tempNo;
+	}
 }

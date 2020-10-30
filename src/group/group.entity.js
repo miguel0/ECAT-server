@@ -1,6 +1,6 @@
 import { Column, Entity, JoinColumn, OneToMany, PrimaryColumn, PrimaryGeneratedColumn } from 'typeorm';
-import { GroupComponent } from '../relationships/group-component';
-import { VehicleGroup } from '../relationships/vehicle-group';
+import { GroupComponent } from '../relationships/group-component/group-component.entity';
+import { VehicleGroup } from '../relationships/vehicle-group/vehicle-group.entity';
 
 @Entity('GRP')
 export class Group {
