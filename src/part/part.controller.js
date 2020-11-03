@@ -39,3 +39,25 @@ export async function editPart(req, res) {
 		res.send(err.message);
 	}
 }
+
+export async function addPart(req, res) {
+	try {
+		const id = req.params.id;
+		const repo = getRepository(Part);
+
+		const {replaceNo, name, chName, spName, otherName} = req.body;
+
+		await repo.insert({
+			id: id,
+			replaceNo: replaceNo,
+			name: name,
+			chName: chName,
+			spName: spName,
+			otherName: otherName,
+		});
+
+		res.send(true);
+	} catch(err) {
+		res.send(err.message);
+	}
+}
