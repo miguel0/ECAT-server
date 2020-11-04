@@ -7,7 +7,6 @@ import cors from 'cors';
 // Routes
 import parts from '../src/part/part.route';
 import components from '../src/component/component.route';
-import auth_route from '../src/auth/auth.route';
 import users from '../src/user/user.route';
 import vehicles from '../src/vehicle/vehicle.route';
 import groups from '../src/group/group.route';
@@ -58,7 +57,6 @@ function registerRoutes() {
     // Register imported routes.
     app.use('/parts', parts);
     app.use('/components', components);
-    app.use('/auth', auth_route);
     app.use('/users', users);
     app.use('/vehicles', vehicles);
 	app.use('/groups', groups);
