@@ -43,3 +43,21 @@ function getPrettyParts(componentParts) {
 
     return parts;
 }
+
+export async function editComponent(req, res) {
+	try {
+		const id = req.params.id;
+		const repo = getRepository(Component);
+
+		const {name, chName, spName, otherName} = req.body;
+
+		await repo.update(id, {
+			name: name,
+			chName: chName,
+			spName: spName,
+			otherName: otherName,
+		});
+	} catch(err) {
+		res.send(err.message);
+	}
+}
