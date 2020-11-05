@@ -1,5 +1,6 @@
 import express from 'express';
 import { getAllComponents, getComponent, editComponent } from './component.controller';
+
 const router = express.Router();
 
 router.get('/', getAllComponents);
