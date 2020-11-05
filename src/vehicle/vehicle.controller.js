@@ -35,6 +35,8 @@ export async function getAllVehicles(req, res) {
 
 export async function addVehicle(req, res) {
 	try {
+		console.log('Adding vehicle...');
+		
 		const id = req.params.id;
 		const repo = getRepository(Vehicle);
 
@@ -53,9 +55,10 @@ export async function addVehicle(req, res) {
 		});
 
 		for (let i = 0; i < groups.length; i++) {
-			addGroup(id, groups[i]);
+			await addGroup(id, groups[i]);
 		}
 
+		console.log('Done adding the vehicle.');
 		res.send(true);
 	} catch(err) {
 		res.send(err.message);
@@ -95,7 +98,7 @@ async function addGroup(vehicleId, group) {
 	});
 
 	for (let i = 0; i < components.length; i++) {
-		addComponent(addedId, components[i]);
+		await addComponent(addedId, components[i]);
 	}
 }
 
@@ -127,10 +130,11 @@ async function addComponent(groupId, component) {
 	while (parts.length > 0) {
 		for (let i = 0; i < parts.length; i++) {
 			if (!parts[i].localNo.includes(".")) {
-				const addedRelId = addPart(
+				const addedRelId = await addPart(
 					addedId,
 					parts[i],
-					parentsIds[parts[i].originalLocalNo.substring(0, parts[i].originalLocalNo.lastIndexOf('.'))]
+					parts[i].originalLocalNo.includes(".") ?
+						parentsIds[parts[i].originalLocalNo.substring(0, parts[i].originalLocalNo.lastIndexOf('.'))] : ''
 				);
 
 				parentsIds[parts[i].originalLocalNo] = addedRelId;
@@ -150,32 +154,34 @@ async function addPart(componentId, part, parentId) {
 
 	const {id, replaceNo, name, spName, chName, otherName, localNo, localQty, remark} = part;
 
+	let relId = '';
 
 	try {
-		await repo.insert({
-			id: id,
-			replaceNo: replaceNo,
-			name: name,
-			spName: spName,
-			chName: chName,
-			otherName: otherName
-		});
-	} catch (err) {
-		console.log(err);
-	}
+		const findResult = await repo.findOne(id);
 
-	try {
-		const added = await repoRel.insert({
+		if (!findResult) {
+			await repo.insert({
+				id: id,
+				replaceNo: replaceNo,
+				name: name,
+				spName: spName,
+				chName: chName,
+				otherName: otherName
+			});		
+		}
+
+		const addedRel = await repoRel.insert({
 			componentId: componentId,
 			partId: id,
-			componentPartId: parentId ? parentId : '',
+			componentPartId: parentId,
 			localNo: localNo,
 			localQty: localQty,
 			remark: remark
 		});
 
-		return added.identifiers[0].id;
-	} catch(err) {
-		console.log(err);
+		relId = addedRel.identifiers[0].id;
+	} catch (err) {
+	} finally {
+		return relId;
 	}
 }
