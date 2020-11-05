@@ -145,7 +145,7 @@ async function addComponent(groupId, component) {
 		}
 
 		for (let i = 0; i < parts.length; i++) {
-			parts[i].localNo.substring(parts[i].localNo.indexOf('.'), parts[i].localNo.length);
+			parts[i].localNo.substring(parts[i].localNo.indexOf('.') + 1, parts[i].localNo.length);
 		}
 	}
 
