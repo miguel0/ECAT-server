@@ -52,15 +52,11 @@ export async function addVehicle(req, res) {
 			transmission: transmission
 		});
 
-		let result = true;
 		for (let i = 0; i < groups.length; i++) {
-			if (!addGroup(id, groups[i])) {
-				result = false;
-				break;
-			}
+			addGroup(id, groups[i]);
 		}
 
-		res.send(result);
+		res.send(true);
 	} catch(err) {
 		res.send(err.message);
 	}
@@ -84,26 +80,23 @@ async function addGroup(vehicleId, group) {
 
 	const {name, spName, chName, otherName, localNo, components} = group;
 
-	const addedGroup = await repo.insert({
+	const added = await repo.insert({
 		name: name,
 		spName: spName,
 		chName: chName,
 		otherName: otherName
 	});
+	const addedId = added.identifiers[0].id;
 
 	await repoRel.insert({
 		vehicleId: vehicleId,
-		groupId: addedGroup.id,
+		groupId: addedId,
 		localNo: localNo
 	});
 
 	for (let i = 0; i < components.length; i++) {
-		if (!addComponent(addedGroup.id, components[i])) {
-			return false;
-		}
+		addComponent(addedId, components[i]);
 	}
-
-	return true;
 }
 
 async function addComponent(groupId, component) {
@@ -112,16 +105,17 @@ async function addComponent(groupId, component) {
 
 	const {name, spName, chName, otherName, localNo, parts} = component;
 
-	const addedComponent = await repo.insert({
+	const added = await repo.insert({
 		name: name,
 		spName: spName,
 		chName: chName,
 		otherName: otherName
 	});
+	const addedId = added.identifiers[0].id;
 
 	await repoRel.insert({
 		groupId: groupId,
-		componentId: addedComponent.id,
+		componentId: addedId,
 		localNo: localNo
 	});
 
@@ -132,24 +126,22 @@ async function addComponent(groupId, component) {
 	let parentsIds = {};
 	while (parts.length > 0) {
 		for (let i = 0; i < parts.length; i++) {
-			if (!parts.localNo.includes(".")) {
-				if (!addPart(addedComponent.id, parts[i],
-					parentsIds[parts[i].originalLocalNo.substring(0, parts[i].originalLocalNo.lastIndexOf('.'))])
-				   ) {
-					return false;
-				} else {
-					parentsIds[parts[i].originalLocalNo] = parts[i].id;
-					parts.splice(i--, 1);
-				}
+			if (!parts[i].localNo.includes(".")) {
+				const addedRelId = addPart(
+					addedId,
+					parts[i],
+					parentsIds[parts[i].originalLocalNo.substring(0, parts[i].originalLocalNo.lastIndexOf('.'))]
+				);
+
+				parentsIds[parts[i].originalLocalNo] = addedRelId;
+				parts.splice(i--, 1);
 			}
 		}
 
 		for (let i = 0; i < parts.length; i++) {
-			parts[i].localNo.substring(parts[i].localNo.indexOf('.') + 1, parts[i].localNo.length);
+			parts[i].localNo = parts[i].localNo.substring(parts[i].localNo.indexOf('.') + 1, parts[i].localNo.length);
 		}
 	}
-
-	return true;
 }
 
 async function addPart(componentId, part, parentId) {
@@ -158,23 +150,32 @@ async function addPart(componentId, part, parentId) {
 
 	const {id, replaceNo, name, spName, chName, otherName, localNo, localQty, remark} = part;
 
-	await repo.insert({
-		id: id,
-		replaceNo: replaceNo,
-		name: name,
-		spName: spName,
-		chName: chName,
-		otherName: otherName
-	});
 
-	await repoRel.insert({
-		componentId: componentId,
-		partId, id,
-		componentPartId: parentId ? parentId : '',
-		localNo: localNo,
-		localQty: localQty,
-		remark: remark
-	});
+	try {
+		await repo.insert({
+			id: id,
+			replaceNo: replaceNo,
+			name: name,
+			spName: spName,
+			chName: chName,
+			otherName: otherName
+		});
+	} catch (err) {
+		console.log(err);
+	}
 
-	return true;
+	try {
+		const added = await repoRel.insert({
+			componentId: componentId,
+			partId: id,
+			componentPartId: parentId ? parentId : '',
+			localNo: localNo,
+			localQty: localQty,
+			remark: remark
+		});
+
+		return added.identifiers[0].id;
+	} catch(err) {
+		console.log(err);
+	}
 }
