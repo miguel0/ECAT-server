@@ -1,7 +1,7 @@
 import { Entity, PrimaryGeneratedColumn, Column, ManyToOne, JoinColumn} from "typeorm";
 import { RelationCountMetadata } from "typeorm/metadata/RelationCountMetadata";
-import { Group } from "../group/group.entity";
-import { Vehicle } from "../vehicle/vehicle.entity";
+import { Group } from "../../group/group.entity";
+import { Vehicle } from "../../vehicle/vehicle.entity";
 
 @Entity('VEHICLEGRP')
 export class VehicleGroup {
