@@ -47,6 +47,21 @@ function getPrettyParts(componentParts) {
     return parts;
 }
 
+function getLocalNo(cp, list, localNo) {
+    let tempNo = cp.localNo.toString() + localNo;
+
+    if(cp.componentPartId) {
+        for(let i = 0; i < list.length; i++) {
+            if(list[i].id === cp.componentPartId) {
+                return getLocalNo(list[i], list, '.' + tempNo);
+            }
+        }
+        return tempNo;
+    } else {
+        return tempNo;
+    }
+}
+
 export async function editComponent(req, res) {
 	try {
 		const id = req.params.id;
