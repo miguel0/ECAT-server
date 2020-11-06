@@ -35,8 +35,8 @@ export async function editVehicle(req, res) {
 		const {name, spName, otherName, model, type, motorConfig, motorPower, transmission} = req.body;
 
 		await repo.update(id, {
-			name: name,
-			spName: spName,
+            name: name,
+            spName: spName,
             otherName: otherName,
             model: model,
             type: type,
