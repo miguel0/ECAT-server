@@ -27,6 +27,30 @@ export async function getAllVehicles(req, res) {
     }
 }
 
+export async function editVehicle(req, res) {
+	try {
+		const id = req.params.id;
+		const repo = getRepository(Vehicle);
+
+		const {name, spName, otherName, model, type, motorConfig, motorPower, transmission} = req.body;
+
+		await repo.update(id, {
+			name: name,
+			spName: spName,
+            otherName: otherName,
+            model: model,
+            type: type,
+            motorConfig: motorConfig,
+            motorPower: motorPower,
+            transmission: transmission
+		});
+
+		res.send(true);
+	} catch(err) {
+		res.send(err.message);
+	}
+}
+
 function getPrettyGroups(vehicleGroups) {
     let groups = [];
     let temp = {};
