@@ -1,10 +1,11 @@
 import express from 'express';
+import { isAuthenticated } from '../auth/auth';
 import { getAllComponents, getComponent, editComponent } from './component.controller';
 
 const router = express.Router();
 
-router.get('/', getAllComponents);
-router.get('/:id', getComponent);
-router.put('/:id', editComponent);
+router.get('/', isAuthenticated, getAllComponents);
+router.get('/:id', isAuthenticated, getComponent);
+router.put('/:id', isAuthenticated, editComponent);
 
 export default router;
