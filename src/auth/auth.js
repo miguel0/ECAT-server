@@ -1,34 +1,35 @@
 import * as admin from 'firebase-admin';
+import {getRepository} from 'typeorm';
+import { User } from '../user/user.entity';
+import { authorize } from './role-functions';
 
-export async function createUser(req, res) {
-  try {
-    console.log(process.env.ORCL_CONN);
-    console.log(process.env.GOOGLE_APPLICATION_CREDENTIALS);
+async function isAuthorized(bearer, permission, req) {
+  // TODO: error handling
 
-    const {email, password} = req.body;
+  const repo = getRepository(User);
+  const user = await repo.findOneOrFail(bearer.uid);
+  let role = user.role;
 
-    let user = await admin.auth().createUser({
-      email: email, 
-      password: password
-    });
-
-    res.send(user);
-  } catch(err) {
-    res.send(err.message);
-  }
+  return authorize(role, permission, user, req.params);
   
 }
 
-export async function isAuthenticated(req, res, next) {
-  let bearerToken = getAuthToken(req);
-  if(await tokenIsVerified(bearerToken)) {
-    return next();
+export function isAuthenticated(permission) {
+  return async (req, res, next) => {
+    
+    let bearerToken = getAuthToken(req);
+    let bearer = await tokenIsVerified(bearerToken);
+
+    if( bearer && await isAuthorized(bearer, permission, req)) {
+      return next();
+    }
+
+    res.status(403);
+    return res.send({message:"Ivalid token."});
+    
   }
-  res.status(403);
-  return res.send({message:"Unauthorized access."});
 }
 
-// 
 function getAuthToken(req) {
   if (
     req.headers.authorization &&

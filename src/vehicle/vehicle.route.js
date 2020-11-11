@@ -4,8 +4,8 @@ import { isAuthenticated } from '../auth/auth';
 
 const router =  express.Router();
 
-router.get('/:id', isAuthenticated, getVehicle);
-router.get('/', isAuthenticated, getAllVehicles);
-router.put('/:id', isAuthenticated, editVehicle);
+router.get('/:id', getVehicle);
+router.get('/', getAllVehicles);
+router.put('/:id', editVehicle);
 
 export default router;
