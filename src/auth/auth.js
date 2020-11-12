@@ -3,15 +3,16 @@ import {getRepository} from 'typeorm';
 import { User } from '../user/user.entity';
 import { authorize } from './role-functions';
 
-async function isAuthorized(bearer, permission, req) {
-  // TODO: error handling
+async function isAuthorized(bearer, permission, req, res) {
+  try {
+    const repo = getRepository(User);
+    const user = await repo.findOneOrFail(bearer.uid);
+    let role = user.role;
 
-  const repo = getRepository(User);
-  const user = await repo.findOneOrFail(bearer.uid);
-  let role = user.role;
-
-  return authorize(role, permission, user, req.params);
-  
+	return authorize(role, permission, user, req.params);
+  } catch {
+	return false;
+  }
 }
 
 export function isAuthenticated(permission) {
@@ -20,12 +21,19 @@ export function isAuthenticated(permission) {
     let bearerToken = getAuthToken(req);
     let bearer = await tokenIsVerified(bearerToken);
 
-    if( bearer && await isAuthorized(bearer, permission, req)) {
-      return next();
-    }
+	let authorization = await isAuthorized(bearer, permission, req, res);
 
-    res.status(403);
-    return res.send({message:"Ivalid token."});
+    if( bearer && authorization) {
+      return next();
+	}
+	
+	if (authorization === false) {
+	  res.status(500);
+	  res.send({message: "Internal Server Error"});
+	} else {
+	  res.status(403);
+	  return res.send({message:"Ivalid token."});
+	}
     
   }
 }
