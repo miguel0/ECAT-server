@@ -4,7 +4,6 @@ import { Column, Entity, PrimaryColumn } from 'typeorm';
 export class User {
 
     @PrimaryColumn({name: 'ID', type: 'varchar2'}) id;
-    @Column({name: 'EMAIL', type: 'varchar2'}) email;
     @Column({name: 'NAME', type: 'varchar2'}) name;
     @Column({name: 'ROLE', type: 'char'}) role;
     @Column({name: 'TEL', type: 'varchar2'}) tel;
