@@ -1,10 +1,12 @@
 import express from 'express';
-import { getAllComponents, getComponent } from './component.controller';
+import perms from './component.permission';
 import { isAuthenticated } from '../auth/auth';
+import { getAllComponents, getComponent, editComponent } from './component.controller';
 
 const router = express.Router();
 
-router.get('/', getAllComponents);
-router.get('/:id', getComponent);
+router.get('/', isAuthenticated(perms.getAll), getAllComponents);
+router.get('/:id', isAuthenticated(perms.get), getComponent);
+router.put('/:id', isAuthenticated(perms.edit), editComponent);
 
 export default router;
