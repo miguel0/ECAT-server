@@ -75,6 +75,8 @@ export async function editComponent(req, res) {
 			spName: spName,
 			otherName: otherName,
 		});
+
+		res.send(true);
 	} catch(err) {
 		res.send(err.message);
 	}

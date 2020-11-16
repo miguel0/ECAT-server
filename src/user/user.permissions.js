@@ -4,5 +4,4 @@ export default {
     add: 'users-02',
     edit: 'users-03',
     delete: 'users-04'
-
 }
