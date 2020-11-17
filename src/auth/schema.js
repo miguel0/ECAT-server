@@ -1,4 +1,6 @@
 import users from '../user/user.permissions';
+import components from '../component/component.permission';
+import groups from '../group/group.permissions';
 
 let baseSchema = {
     C: {
@@ -12,7 +14,10 @@ let baseSchema = {
                         return bearer.id === params.id;
                     }
                 ] 
-            }
+			},
+			[components.getAll]: {},
+			[components.get]: {},
+			[groups.get]: {}
         },
     },
     A: {
@@ -30,7 +35,9 @@ let baseSchema = {
             [users.getAll]: {},
             [users.add]: {},
             [users.edit]: {},
-            [users.delete]: {}
+			[users.delete]: {},
+			[components.edit]: {},
+			[groups.edit]: {}
         }
     }
 }

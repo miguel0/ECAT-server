@@ -30,3 +30,23 @@ function getPrettyComponents(groupComponents) {
     });
     return components;
 }
+
+export async function editGroup(req, res) {
+	try {
+		const id = req.params.id;
+		const repo = getRepository(Group);
+
+		const {name, chName, spName, otherName} = req.body;
+
+		await repo.update(id, {
+			name: name,
+			chName: chName,
+			spName: spName,
+			otherName: otherName,
+		});
+
+		res.send(true);
+	} catch(err) {
+		res.send(err.message);
+	}
+}
