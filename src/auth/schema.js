@@ -1,6 +1,7 @@
 import users from '../user/user.permissions';
 import components from '../component/component.permission';
 import parts from '../part/part.permissions';
+import groups from '../group/group.permissions';
 
 let baseSchema = {
     C: {
@@ -17,7 +18,8 @@ let baseSchema = {
 			},
 			[components.getAll]: {},
             [components.get]: {},
-            [parts.get]: {}
+            [parts.get]: {},
+			[groups.get]: {}
         },
     },
     A: {
@@ -39,7 +41,8 @@ let baseSchema = {
             [components.edit]: {},
             [parts.edit]: {},
             [parts.delete]: {},
-            [parts.add]: {}
+            [parts.add]: {},
+			[groups.edit]: {}
         }
     }
 }
