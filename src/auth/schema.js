@@ -1,5 +1,6 @@
 import users from '../user/user.permissions';
 import components from '../component/component.permission';
+import vehicles from '../vehicle/vehicle.permissions';
 
 let baseSchema = {
     C: {
@@ -15,7 +16,9 @@ let baseSchema = {
                 ] 
 			},
 			[components.getAll]: {},
-			[components.get]: {}
+			[components.get]: {},
+			[vehicles.getAll]: {},
+			[vehicles.get]: {}
         },
     },
     A: {
@@ -34,7 +37,9 @@ let baseSchema = {
             [users.add]: {},
             [users.edit]: {},
 			[users.delete]: {},
-			[components.edit]: {}
+			[components.edit]: {},
+			[vehicles.add]: {},
+			[vehicles.edit]: {}
         }
     }
 }

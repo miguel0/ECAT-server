@@ -1,12 +1,13 @@
 import express from 'express';
+import perms from './vehicle.permissions';
 import { getVehicle, getAllVehicles, addVehicke, editVehicle } from './vehicle.controller';
 import { isAuthenticated } from '../auth/auth';
 
 const router =  express.Router();
 
-router.get('/:id', isAuthenticated, getVehicle);
-router.get('/', isAuthenticated, getAllVehicles);
-router.post('/:id', isAuthenticated, addVehicle);
-router.put('/:id', isAuthenticated, editVehicle);
+router.get('/:id', isAuthenticated(perms.get), getVehicle);
+router.get('/', isAuthenticated(perms.getAll), getAllVehicles);
+router.post('/:id', isAuthenticated(perms.add), addVehicle);
+router.put('/:id', isAuthenticated(perms.edit), editVehicle);
 
 export default router;
