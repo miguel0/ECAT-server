@@ -6,6 +6,6 @@ const router = express.Router();
 
 // PREFIX: /component-parts
 
-router.delete('/:id', isAuthenticated, deleteComponentPart);
+router.delete('/:id', deleteComponentPart);
 
 export default router;
