@@ -1,6 +1,9 @@
 import users from '../user/user.permissions';
 import components from '../component/component.permission';
 import groups from '../group/group.permissions';
+import parts from '../part/part.permissions';
+import vehicles from '../vehicle/vehicle.permissions';
+import compPart from '../relationships/component-part/component-part-permission';
 
 let baseSchema = {
     C: {
@@ -17,7 +20,11 @@ let baseSchema = {
 			},
 			[components.getAll]: {},
 			[components.get]: {},
-			[groups.get]: {}
+			[groups.get]: {},
+			[parts.getAll]: {},
+			[parts.get]: {},
+			[vehicles.getAll]: {},
+			[vehicles.get]: {}
         },
     },
     A: {
@@ -37,7 +44,12 @@ let baseSchema = {
             [users.edit]: {},
 			[users.delete]: {},
 			[components.edit]: {},
-			[groups.edit]: {}
+			[groups.edit]: {},
+			[parts.add]: {},
+			[parts.edit]: {},
+			[vehicles.add]: {},
+			[vehicles.edit]: {},
+			[compPart.delete]: {}
         }
     }
 }
