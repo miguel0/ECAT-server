@@ -53,7 +53,7 @@ export async function editPart(req, res, next) {
 		const id = req.params.id;
 		const repo = getRepository(Part);
 
-		const {replaceNo, name, chName, spName, otherName} = req.body;
+		const {replaceNo, name, chName, spName, otherName, imageURL} = req.body;
 
 		await repo.findOneOrFail(id);
 
@@ -63,6 +63,7 @@ export async function editPart(req, res, next) {
 			chName: chName,
 			spName: spName,
 			otherName: otherName,
+			imageURL: imageURL
 		});
 
 		return res.send(true);

@@ -105,7 +105,8 @@ export async function editVehicle(req, res, next) {
             type: type,
             motorConfig: motorConfig,
             motorPower: motorPower,
-            transmission: transmission
+			transmission: transmission,
+			imageURL: imageURL
 		});
         
 		return res.send(true);
