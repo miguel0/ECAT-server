@@ -12,5 +12,4 @@ router.get('/:id', isAuthenticated(perms.get), getPart);
 router.put('/:id', isAuthenticated(perms.edit), editPart);
 router.post('/:id', isAuthenticated(perms.add), addPart);
 
-
 export default router;
