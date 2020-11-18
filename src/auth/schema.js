@@ -17,8 +17,8 @@ let baseSchema = {
                 ] 
 			},
 			[components.getAll]: {},
-            [components.get]: {},
-            [parts.get]: {},
+			[components.get]: {},
+			[parts.get]: {},
 			[groups.get]: {}
         },
     },
@@ -34,14 +34,14 @@ let baseSchema = {
                     }
                 ]
             },
-            [users.getAll]: {},
-            [users.add]: {},
-            [users.edit]: {},
+			[users.getAll]: {},
+			[users.add]: {},
+			[users.edit]: {},
 			[users.delete]: {},
-            [components.edit]: {},
-            [parts.edit]: {},
-            [parts.delete]: {},
-            [parts.add]: {},
+			[components.edit]: {},
+			[parts.edit]: {},
+			[parts.delete]: {},
+			[parts.add]: {},
 			[groups.edit]: {}
         }
     }
