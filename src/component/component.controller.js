@@ -67,13 +67,14 @@ export async function editComponent(req, res) {
 		const id = req.params.id;
 		const repo = getRepository(Component);
 
-		const {name, chName, spName, otherName} = req.body;
+		const {name, chName, spName, otherName, imageURL} = req.body;
 
 		await repo.update(id, {
 			name: name,
 			chName: chName,
 			spName: spName,
 			otherName: otherName,
+			imageURL: imageURL
 		});
 
 		res.send(true);

@@ -24,7 +24,7 @@ export async function editPart(req, res) {
 		const id = req.params.id;
 		const repo = getRepository(Part);
 
-		const {replaceNo, name, chName, spName, otherName} = req.body;
+		const {replaceNo, name, chName, spName, otherName, imageURL} = req.body;
 
 		await repo.update(id, {
 			replaceNo: replaceNo,
@@ -32,6 +32,7 @@ export async function editPart(req, res) {
 			chName: chName,
 			spName: spName,
 			otherName: otherName,
+			imageURL: imageURL
 		});
 
 		res.send(true);
