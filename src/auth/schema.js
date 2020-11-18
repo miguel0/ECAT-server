@@ -1,5 +1,6 @@
 import users from '../user/user.permissions';
 import components from '../component/component.permission';
+import parts from '../part/part.permissions';
 import groups from '../group/group.permissions';
 import parts from '../part/part.permissions';
 import vehicles from '../vehicle/vehicle.permissions';
@@ -39,9 +40,9 @@ let baseSchema = {
                     }
                 ]
             },
-            [users.getAll]: {},
-            [users.add]: {},
-            [users.edit]: {},
+			[users.getAll]: {},
+			[users.add]: {},
+			[users.edit]: {},
 			[users.delete]: {},
 			[components.edit]: {},
 			[groups.edit]: {},
