@@ -10,7 +10,6 @@ export async function getAllComponents(req, res) {
 	} catch(err) {
 		console.log(err.message);
 	}
-	
 }
 
 export async function getComponent(req, res) {
@@ -72,11 +71,9 @@ export async function editComponent(req, res) {
 			res.status(400).json({ errors: errors.array() });
 
 			return;
-		  }
+		}
 
 		const {name, chName, spName, otherName} = req.body;
-
-		
 
 		await repo.update(id, {
 			name: name,

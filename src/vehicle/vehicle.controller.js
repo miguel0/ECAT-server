@@ -1,6 +1,6 @@
-//vechicle.controller.js
 import { getRepository } from 'typeorm';
 import { Vehicle } from './vehicle.entity';
+import { validationResult } from 'express-validator';
 
 export async function getVehicle(req, res) {
     try {
@@ -14,7 +14,6 @@ export async function getVehicle(req, res) {
     } catch(err) {
         res.end(err.message);
     }
-    
 }
 
 export async function getAllVehicles(req, res) {
@@ -30,31 +29,17 @@ export async function getAllVehicles(req, res) {
 export async function editVehicle(req, res) {
 	try {
 		const id = req.params.id;
-		const repo = getRepository(Vehicle);
+        const repo = getRepository(Vehicle);
+        const errors = validationResult(req);
+
+		if (!errors.isEmpty()) {
+			res.status(400).json({ errors: errors.array() });
+
+			return;
+		}
 
 		const {name, spName, otherName, model, type, motorConfig, motorPower, transmission} = req.body;
 
-        if(name.length > 49){
-			res.status(400);
-			throw {
-				"message" : "Atributo 'name' excede el limite de caracteres"
-			};
-		}
-
-		if(spName.length > 49){
-			res.status(400);
-			throw {
-				"message" : "Atributo 'spName' excede el limite de caracteres"
-			};
-		}
-
-		if(otherName.length > 49){
-			res.status(400);
-			throw {
-				"message" : "Atributo 'otherName' excede el limite de caracteres"
-			};
-		}
-        
 		await repo.update(id, {
             name: name,
             spName: spName,

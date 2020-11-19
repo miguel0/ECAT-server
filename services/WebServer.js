@@ -11,7 +11,6 @@ import users from '../src/user/user.route';
 import vehicles from '../src/vehicle/vehicle.route';
 import groups from '../src/group/group.route';
 import componentParts from '../src/relationships/component-part/component-part.route';
-//import { expressValidator } from 'express-validator';
 
 let app;
 let httpServer;
@@ -22,7 +21,6 @@ export function initialize() {
         app.use(cors());
         app.use(morgan('combined'));
         app.use(express.json());
-        //app.use(expressValidator);
         httpServer = http.createServer(app);
         registerRoutes();
         httpServer.listen(config)

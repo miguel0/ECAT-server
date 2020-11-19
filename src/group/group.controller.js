@@ -1,6 +1,6 @@
-import { group } from 'console';
 import { getRepository } from 'typeorm';
 import { Group } from './group.entity';
+import { validationResult } from 'express-validator';
 
 export async function getGroup(req, res) {
     try {
@@ -34,37 +34,16 @@ function getPrettyComponents(groupComponents) {
 export async function editGroup(req, res) {
 	try {
 		const id = req.params.id;
-		const repo = getRepository(Group);
+        const repo = getRepository(Group);
+        const errors = validationResult(req);
+
+		if (!errors.isEmpty()) {
+			res.status(400).json({ errors: errors.array() });
+
+			return;
+		}
 
 		const {name, chName, spName, otherName} = req.body;
-
-        if(name.length > 49){
-			res.status(400);
-			throw {
-				"message" : "Atributo 'name' excede el limite de caracteres"
-			};
-		}
-
-		if(chName.length > 49){
-			res.status(400);
-			throw {
-				"message" : "Atributo 'chName' excede el limite de caracteres"
-			};
-		}
-
-		if(spName.length > 49){
-			res.status(400);
-			throw {
-				"message" : "Atributo 'spName' excede el limite de caracteres"
-			};
-		}
-
-		if(otherName.length > 49){
-			res.status(400);
-			throw {
-				"message" : "Atributo 'otherName' excede el limite de caracteres"
-			};
-		}
 
 		await repo.update(id, {
 			name: name,
