@@ -34,6 +34,27 @@ export async function editVehicle(req, res) {
 
 		const {name, spName, otherName, model, type, motorConfig, motorPower, transmission} = req.body;
 
+        if(name.length > 49){
+			res.status(400);
+			throw {
+				"message" : "Atributo 'name' excede el limite de caracteres"
+			};
+		}
+
+		if(spName.length > 49){
+			res.status(400);
+			throw {
+				"message" : "Atributo 'spName' excede el limite de caracteres"
+			};
+		}
+
+		if(otherName.length > 49){
+			res.status(400);
+			throw {
+				"message" : "Atributo 'otherName' excede el limite de caracteres"
+			};
+		}
+        
 		await repo.update(id, {
             name: name,
             spName: spName,

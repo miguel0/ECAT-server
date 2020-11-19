@@ -1,6 +1,6 @@
-import { tmpdir } from "os";
 import { getRepository } from "typeorm";
 import { Component } from "./component.entity";
+import { validationResult } from 'express-validator';
 
 export async function getAllComponents(req, res) {
 	try {
@@ -66,8 +66,17 @@ export async function editComponent(req, res) {
 	try {
 		const id = req.params.id;
 		const repo = getRepository(Component);
+		const errors = validationResult(req);
+
+		if (!errors.isEmpty()) {
+			res.status(400).json({ errors: errors.array() });
+
+			return;
+		  }
 
 		const {name, chName, spName, otherName} = req.body;
+
+		
 
 		await repo.update(id, {
 			name: name,
@@ -78,6 +87,7 @@ export async function editComponent(req, res) {
 
 		res.send(true);
 	} catch(err) {
-		res.send(err.message);
+		console.log("this");
+		res.send(err.message); 
 	}
 }

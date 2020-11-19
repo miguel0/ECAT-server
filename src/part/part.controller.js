@@ -26,6 +26,41 @@ export async function editPart(req, res) {
 
 		const {replaceNo, name, chName, spName, otherName} = req.body;
 
+		/*if(replaceNo.length > 49){
+			res.status(400);
+			throw {
+				"message" : "Atributo 'replaceNo' excede el limite de caracteres"
+			};
+		}*/
+		
+		if(name.length > 49){
+			res.status(400);
+			throw {
+				"message" : "Atributo 'name' excede el limite de caracteres"
+			};
+		}
+
+		if(chName.length > 49){
+			res.status(400);
+			throw {
+				"message" : "Atributo 'chName' excede el limite de caracteres"
+			};
+		}
+
+		if(spName.length > 49){
+			res.status(400);
+			throw {
+				"message" : "Atributo 'spName' excede el limite de caracteres"
+			};
+		}
+
+		if(otherName.length > 49){
+			res.status(400);
+			throw {
+				"message" : "Atributo 'otherName' excede el limite de caracteres"
+			};
+		}
+
 		await repo.update(id, {
 			replaceNo: replaceNo,
 			name: name,

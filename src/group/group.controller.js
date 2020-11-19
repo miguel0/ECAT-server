@@ -38,6 +38,34 @@ export async function editGroup(req, res) {
 
 		const {name, chName, spName, otherName} = req.body;
 
+        if(name.length > 49){
+			res.status(400);
+			throw {
+				"message" : "Atributo 'name' excede el limite de caracteres"
+			};
+		}
+
+		if(chName.length > 49){
+			res.status(400);
+			throw {
+				"message" : "Atributo 'chName' excede el limite de caracteres"
+			};
+		}
+
+		if(spName.length > 49){
+			res.status(400);
+			throw {
+				"message" : "Atributo 'spName' excede el limite de caracteres"
+			};
+		}
+
+		if(otherName.length > 49){
+			res.status(400);
+			throw {
+				"message" : "Atributo 'otherName' excede el limite de caracteres"
+			};
+		}
+
 		await repo.update(id, {
 			name: name,
 			chName: chName,
