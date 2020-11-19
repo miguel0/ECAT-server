@@ -1,6 +1,7 @@
 //part.controller.js
 import {getRepository} from 'typeorm';
 import { Part } from './part.entity';
+import { validationResult } from 'express-validator';
 
 export async function getAllParts(req, res) {
 	const repo = getRepository(Part);
@@ -77,6 +78,14 @@ export async function editPart(req, res) {
 
 export async function addPart(req, res) {
 	try {
+
+		const errors = validationResult(req);
+
+		if (!errors.isEmpty()) {
+			return res.status(400).json({ errors: errors.array() });
+			
+        }
+
 		const id = req.params.id;
 		const repo = getRepository(Part);
 

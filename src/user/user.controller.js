@@ -1,6 +1,7 @@
 import {getRepository} from 'typeorm';
 import { User } from './user.entity';
 import * as admin from 'firebase-admin';
+import { validationResult } from 'express-validator';
 
 export async function getAllUsers(req, res) {
     try {
@@ -25,6 +26,13 @@ export async function getUser(req, res) {
 
 export async function createUser(req, res) {
     try {
+
+        const errors = validationResult(req);
+
+		if (!errors.isEmpty()) {
+			return res.status(400).json({ errors: errors.array() });
+			
+        }
 
         const {name, role, 
             tel, position, 
