@@ -27,7 +27,7 @@ export function isAuthenticated(permission) {
 	}
 	
 	res.status(403);
-	return res.send({message:"Ivalid token."});
+	return res.send({message:"Invalid token."});
   }
 }
 
