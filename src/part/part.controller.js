@@ -1,5 +1,9 @@
 //part.controller.js
-import {getRepository} from 'typeorm';
+import {getRepository, createQueryBuilder} from 'typeorm';
+import { ComponentPart } from '../relationships/component-part/component-part.entity';
+import { GroupComponent } from '../relationships/group-component/group-component.entity';
+import { VehicleGroup } from '../relationships/vehicle-group/vehicle-group.entity';
+import { Vehicle } from '../vehicle/vehicle.entity';
 import { Part } from './part.entity';
 
 export async function getAllParts(req, res) {
@@ -13,6 +17,16 @@ export async function getPart(req, res) {
 		const id = req.params.id;
 		const repo = getRepository(Part);
 		const part = await repo.findOneOrFail({id: id});
+		const vehicles = await createQueryBuilder(ComponentPart, 'CP')
+			.select('VG.VEHICLEID', 'id')
+			.distinct(true)
+			.addSelect('V.NAME', 'name')
+			.innerJoin(GroupComponent, 'GC', 'CP.COMPONENTID = GC.COMPONENTID')
+			.innerJoin(VehicleGroup, 'VG', 'GC.GRPID = VG.GRPID')
+			.innerJoin(Vehicle, 'V', 'VG.VEHICLEID = V.ID')
+			.where(`CP.PARTID = '${id}'`)
+			.getRawMany();
+		part.foundIn = vehicles;
 		res.send(part);
 	} catch(err) {
 		res.send(err.message);
