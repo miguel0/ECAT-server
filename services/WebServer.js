@@ -25,7 +25,6 @@ export function initialize() {
         app.use(cors());
         app.use(morgan('combined'));
         app.use(express.json());
-        //app.use(expressValidator);
         httpServer = http.createServer(app);
         registerRoutes();
         httpServer.listen(config)

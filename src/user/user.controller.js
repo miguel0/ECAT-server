@@ -2,6 +2,7 @@ import {getRepository} from 'typeorm';
 import { User } from './user.entity';
 import * as admin from 'firebase-admin';
 import { validationResult } from 'express-validator';
+import { BadBodyError } from '../exceptions/exceptions';
 
 export async function getAllUsers(req, res) {
     try {
@@ -24,15 +25,14 @@ export async function getUser(req, res) {
     }
 }
 
-export async function createUser(req, res) {
+export async function createUser(req, res, next) {
     try {
 
         const errors = validationResult(req);
 
-		if (!errors.isEmpty()) {
-			return res.status(400).json({ errors: errors.array() });
-			
-        }
+        if (!errors.isEmpty())
+            throw new BadBodyError(errors);
+        
 
         const {name, role, 
             tel, position, 
@@ -62,8 +62,8 @@ export async function createUser(req, res) {
         
 
     } catch(err) {
-        res.send(err.message);
         // TODO: any error (db or firebase) should drop created user
         // on either platform.
+        next(err);
     }
 }
