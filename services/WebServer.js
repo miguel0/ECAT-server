@@ -13,6 +13,9 @@ import groups from '../src/group/group.route';
 import componentParts from '../src/relationships/component-part/component-part.route';
 //import { expressValidator } from 'express-validator';
 
+// Exceptions
+import { handleError, ResourceNotFoundError } from '../src/exceptions/exceptions';
+
 let app;
 let httpServer;
 
@@ -62,6 +65,18 @@ function registerRoutes() {
     app.use('/users', users);
     app.use('/vehicles', vehicles);
 	app.use('/groups', groups);
-	app.use('/component-parts', componentParts);
-    
+    app.use('/component-parts', componentParts);
+
+
+    // Any new routes or handlers should be registered above this line.
+
+    // Any unmatching routes will issue a 404 code.
+    app.all('*', (req, res, next) => {
+        next(new ResourceNotFoundError());
+    });
+
+    // Custom error handler that returns client-intended error codes.
+    // Must be the last registered handler.
+    app.use(handleError);
+
 }
