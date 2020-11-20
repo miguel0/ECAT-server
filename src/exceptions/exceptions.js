@@ -29,6 +29,7 @@ export class ResourceNotFoundError extends GeneralError {
     }
 }
 
+// For use with express-validator generated errors.
 export class BadBodyError extends GeneralError {
 
     constructor(errors) {
@@ -44,8 +45,6 @@ export class BadBodyError extends GeneralError {
 
     
 }
-
-
 
 
 

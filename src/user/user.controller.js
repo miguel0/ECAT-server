@@ -2,28 +2,28 @@ import {getRepository} from 'typeorm';
 import { User } from './user.entity';
 import * as admin from 'firebase-admin';
 import { validationResult } from 'express-validator';
-import { BadBodyError } from '../exceptions/exceptions';
+import { BadBodyError, GeneralError } from '../exceptions/exceptions';
 
 export async function getAllUsers(req, res) {
     try {
         const repo = getRepository(User);
         const users = await repo.find();
-        res.send(users);
+        return res.send(users);
     } catch(err) {
-        res.send(err.message);
+        next(err);
     }
 }
 
-export async function getUser(req, res) {
+export async function getUser(req, res, next) {
     try {
         let id = req.params.id;
         let firebaseUser = await admin.auth().getUser(id);
         const repo = getRepository(User);
         const user = await repo.findOneOrFail(id);
         user.email = firebaseUser.email;
-        res.send(user);
+        return res.send(user);
     } catch(err) {
-        res.send(err.message);
+        next(err);
     }
 }
 
@@ -56,16 +56,18 @@ export async function addUser(req, res, next) {
             area: area
         });
 
-        // TODO: returned user from insert is not the same format as
-        // if querying it with repo.find(). CHECK.
         user.email = email;
 
         res.send(true);
         
 
     } catch(err) {
-        // TODO: any error (db or firebase) should drop created user
-        // on either platform.
+        if(err.codePrefix && err.codePrefix === 'auth') {
+            if(err.code === 'auth/email-already-exists')
+                err = new GeneralError('El email ingresado ya está en uso.');
+        }
+        // TODO: delete user from firebase in case db insert fails.
+
         next(err);
     }
 }
@@ -94,7 +96,7 @@ export async function editUser(req, res) {
 
         res.send(true);
     } catch(err) {
-        res.send(err.message);
+        next(err);
     }
 }
 
