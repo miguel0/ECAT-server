@@ -15,17 +15,18 @@ export async function getAllUsers(req, res) {
 export async function getUser(req, res) {
     try {
         let id = req.params.id;
+        let firebaseUser = await admin.auth().getUser(id);
         const repo = getRepository(User);
         const user = await repo.findOneOrFail(id);
+        user.email = firebaseUser.email;
         res.send(user);
     } catch(err) {
         res.send(err.message);
     }
 }
 
-export async function createUser(req, res) {
+export async function addUser(req, res) {
     try {
-
         const {name, role, 
             tel, position, 
             area, email, password} = req.body;
@@ -50,12 +51,59 @@ export async function createUser(req, res) {
         // if querying it with repo.find(). CHECK.
         user.email = email;
 
-        res.send(user);
+        res.send(true);
         
 
     } catch(err) {
         res.send(err.message);
         // TODO: any error (db or firebase) should drop created user
         // on either platform.
+    }
+}
+
+export async function editUser(req, res) {
+    try {
+        const id = req.params.id;
+        const {name, role, tel, position, area, email} = req.body;
+
+        let firebaseUser = await admin.auth().updateUser(id,{
+            email: email
+        });
+
+        const repo = getRepository(User);
+
+        let user = await repo.update(id,{
+            name: name,
+            role: role,
+            tel: tel,
+            position: position,
+            area: area
+        });
+
+        // TODO: returned user from insert is not the same format as
+        // if querying it with repo.find(). CHECK.
+
+        res.send(true);
+    } catch(err) {
+        res.send(err.message);
+    }
+}
+
+export async function deleteUser(req, res) {
+    try {
+        const id = req.params.id;
+
+        await admin.auth().deleteUser(id);
+
+        const repo = getRepository(User);
+
+        let user = await repo.delete(id);
+
+        // TODO: returned user from insert is not the same format as
+        // if querying it with repo.find(). CHECK.
+
+        res.send(true);
+    } catch(err) {
+        res.send(err.message);
     }
 }
