@@ -1,6 +1,9 @@
+import dotenv from 'dotenv';
+dotenv.config();
 import * as webServer from './services/WebServer';
 import * as dbConfig from './config/Database.js';
 import * as database from './services/Database.js';
+import * as firebase from './services/Firebase';
 
 process.env.UV_THREADPOOL_SIZE = dbConfig.pool.poolMax + 4;
 
@@ -11,6 +14,14 @@ async function startup() {
         await database.initialize();
     } catch(err) {
         console.log('Failed to connect uwu', err);
+        process.exit(-1);
+    }
+
+    console.log("Initializing firebase connection...");
+    try {
+        await firebase.initialize();
+    } catch(err) {
+        console.log(err);
         process.exit(-1);
     }
 

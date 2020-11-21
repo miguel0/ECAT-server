@@ -1,38 +1,14 @@
 import express from 'express';
-import { Http2ServerRequest } from 'http2';
-import { getRepository } from 'typeorm';
-import { User } from './user.entity';
+import { isAuthenticated } from '../auth/auth';
+import perms from './user.permissions'; 
+import { getAllUsers, addUser, getUser, editUser, deleteUser } from './user.controller';
 
 const router = express.Router();
 
-router.get('/', async (req, res, next) => {
-    try {
-        //return res.status(400).json({message: "Something happened..."});
-        const repo = getRepository(User);
-        const users = await repo.find();
-        res.send(users);
-    } catch(err) {
-        console.log("error here!!");
-        res.send(err.message);
-    }
-    
-});
-
-router.post('/', async (req, res) => {
-    try {
-        let bodyUser = req.body.user;
-        const repo = getRepository(User);
-
-        const newUser = repo.create(bodyUser);
-
-        let savedUser = await repo.save(newUser);
-
-        res.send(savedUser);
-        
-
-    } catch(err) {
-        res.send(err.message);
-    }
-});
+router.post('/', isAuthenticated(perms.add), addUser);
+router.get('/', isAuthenticated(perms.getAll), getAllUsers);
+router.get('/:id', isAuthenticated(perms.get), getUser);
+router.put('/:id', isAuthenticated(perms.edit), editUser);
+router.delete('/:id', isAuthenticated(perms.delete), deleteUser);
 
 export default router;

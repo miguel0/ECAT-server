@@ -1,13 +1,23 @@
-import { Entity, PrimaryGeneratedColumn, Column} from "typeorm";
+import { Entity, PrimaryGeneratedColumn, Column, OneToMany} from "typeorm";
+import { ComponentPart } from "../relationships/component-part/component-part.entity";
+import { GroupComponent } from "../relationships/group-component/group-component.entity";
 
-@Entity()
+@Entity('COMPONENT')
 export class Component {
 
-    @PrimaryGeneratedColumn('int') id;
-    @Column('varchar') name;
-    @Column('varchar') chName;
-    @Column('varchar') spName;
-    @Column('varchar') otherName;
-    @Column('varchar') imageURL;
-    
+    @PrimaryGeneratedColumn({name:'ID', type:'int'}) id;
+    @Column({name: 'NAME', type:'varchar2'}) name;
+    @Column({name: 'SPNAME', type:'varchar2'}) spName;
+    @Column({name: 'CHNAME', type:'varchar2'}) chName;
+    @Column({name: 'OTHERNAME', type:'varchar2'}) otherName;
+    @Column({name: 'IMAGEURL', type: 'varchar2'}) imageURL;
+
+    // Relations
+
+    @OneToMany(() => GroupComponent, groupComponent => groupComponent.component)
+    groupComponents;
+
+    @OneToMany(() => ComponentPart, componentPart => componentPart.component)
+    componentParts;
+
 }

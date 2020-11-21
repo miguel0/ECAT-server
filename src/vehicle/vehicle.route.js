@@ -1,0 +1,12 @@
+import express from 'express';
+import perms from './vehicle.permissions';
+import { getVehicle, getAllVehicles, editVehicle } from './vehicle.controller';
+import { isAuthenticated } from '../auth/auth';
+
+const router =  express.Router();
+
+router.get('/:id', isAuthenticated(perms.get), getVehicle);
+router.get('/', isAuthenticated(perms.getAll), getAllVehicles);
+router.put('/:id', isAuthenticated(perms.edit), editVehicle);
+
+export default router;

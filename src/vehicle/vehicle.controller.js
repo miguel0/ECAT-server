@@ -1,0 +1,64 @@
+//vechicle.controller.js
+import { getRepository } from 'typeorm';
+import { Vehicle } from './vehicle.entity';
+
+export async function getVehicle(req, res) {
+    try {
+        //return res.status(400).json({message: "Something happened..."});
+        let id = req.params.id;
+        const repo = getRepository(Vehicle);
+        const vehicle = await repo.findOneOrFail({id: id}, {relations: ['vehicleGroups', 'vehicleGroups.group']});
+        vehicle.groups = getPrettyGroups(vehicle.vehicleGroups);
+        vehicle.vehicleGroups = undefined;
+        res.send(vehicle);
+    } catch(err) {
+        res.end(err.message);
+    }
+    
+}
+
+export async function getAllVehicles(req, res) {
+    try {
+        const repo = getRepository(Vehicle);
+        const vehicles = await repo.find();
+        res.send(vehicles);
+    } catch(err) {
+        res.end(err.message);
+    }
+}
+
+export async function editVehicle(req, res) {
+	try {
+		const id = req.params.id;
+		const repo = getRepository(Vehicle);
+
+		const {name, spName, otherName, model, type, motorConfig, motorPower, transmission} = req.body;
+
+		await repo.update(id, {
+            name: name,
+            spName: spName,
+            otherName: otherName,
+            model: model,
+            type: type,
+            motorConfig: motorConfig,
+            motorPower: motorPower,
+            transmission: transmission
+		});
+
+		res.send(true);
+	} catch(err) {
+		res.send(err.message);
+	}
+}
+
+function getPrettyGroups(vehicleGroups) {
+    let groups = [];
+    let temp = {};
+    vehicleGroups.forEach(vg => {
+        temp = vg.group;
+        temp.localNo = vg.localNo;
+        groups.push(temp);
+        temp = {};
+    });
+    return groups;
+}
