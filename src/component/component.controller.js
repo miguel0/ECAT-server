@@ -92,3 +92,20 @@ export async function editComponent(req, res, next) {
 		next(err);
 	}
 }
+
+export async function editComponentImage(req, res) {
+	try {
+		const id = req.params.id;
+		const repo = getRepository(Component);
+
+		const imageUrl = req.body;
+
+		await repo.update(id, {
+			imageUrl: imageUrl,
+		});
+
+		res.send(true);
+	} catch(err) {
+		res.send(err.message);
+	}
+}

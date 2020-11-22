@@ -114,6 +114,23 @@ export async function editVehicle(req, res, next) {
 	}
 }
 
+export async function editVehicleImage(req, res) {
+    try {
+        const id = req.params.id;
+        const repo = getRepository(Vehicle);
+
+        const imageUrl = req.body;
+
+        await repo.update(id, {
+            imageUrl: imageUrl
+        });
+
+        res.send(true);
+    } catch(err) {
+        res.send(err.message);
+    }
+}
+
 function getPrettyGroups(vehicleGroups) {
     let groups = [];
     let temp = {};
