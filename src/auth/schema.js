@@ -49,7 +49,9 @@ let baseSchema = {
 			[parts.edit]: {},
 			[vehicles.add]: {},
 			[vehicles.edit]: {},
-			[compPart.delete]: {}
+			[compPart.delete]: {},
+			[compPart.get]: {},
+			[compPart.edit]: {}
         }
     }
 }
