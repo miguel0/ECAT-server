@@ -1,5 +1,9 @@
-//part.controller.js
 import {createQueryBuilder, getRepository} from 'typeorm';
+import {getRepository, createQueryBuilder} from 'typeorm';
+import { ComponentPart } from '../relationships/component-part/component-part.entity';
+import { GroupComponent } from '../relationships/group-component/group-component.entity';
+import { VehicleGroup } from '../relationships/vehicle-group/vehicle-group.entity';
+import { Vehicle } from '../vehicle/vehicle.entity';
 import { Part } from './part.entity';
 import { validationResult } from 'express-validator';
 import { ComponentPart } from '../relationships/component-part/component-part.entity';
