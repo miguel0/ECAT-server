@@ -2,7 +2,7 @@ import express from 'express';
 import perms from './vehicle.permissions';
 import { getVehicle, getAllVehicles, editVehicle } from './vehicle.controller';
 import { isAuthenticated } from '../auth/auth';
-import validate from '../validation/component.validation';
+import validate from '../validation/vehicle.validation';
 
 const router =  express.Router();
 
