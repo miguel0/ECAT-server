@@ -1,8 +1,9 @@
 import { getRepository } from 'typeorm';
 import { Group } from './group.entity';
 import { validationResult } from 'express-validator';
+import { BadBodyError } from '../exceptions/exceptions';
 
-export async function getGroup(req, res) {
+export async function getGroup(req, res, next) {
     try {
         let id = req.params.id;
         const repo = getRepository(Group);
@@ -12,9 +13,9 @@ export async function getGroup(req, res) {
         );
         group.components = getPrettyComponents(group.groupComponents);
         group.groupComponents = undefined;
-        res.send(group);
+        return res.send(group);
     } catch(err) {
-        res.send(err.message);
+        next(err);
     }
     
 }
@@ -31,19 +32,21 @@ function getPrettyComponents(groupComponents) {
     return components;
 }
 
-export async function editGroup(req, res) {
+export async function editGroup(req, res, next) {
 	try {
-		const id = req.params.id;
-        const repo = getRepository(Group);
+
         const errors = validationResult(req);
 
 		if (!errors.isEmpty()) {
-			res.status(400).json({ errors: errors.array() });
+			throw new BadBodyError(errors);
+        }
+        
+		const id = req.params.id;
+        const repo = getRepository(Group);
 
-			return;
-		}
-
-		const {name, chName, spName, otherName} = req.body;
+        const {name, chName, spName, otherName} = req.body;
+        
+        await repo.findOneOrFail(id);
 
 		await repo.update(id, {
 			name: name,
@@ -52,8 +55,8 @@ export async function editGroup(req, res) {
 			otherName: otherName,
 		});
 
-		res.send(true);
+		return res.send(true);
 	} catch(err) {
-		res.send(err.message);
+		next(err);
 	}
 }
