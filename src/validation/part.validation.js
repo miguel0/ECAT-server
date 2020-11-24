@@ -21,23 +21,28 @@ export default [
 
       }).withMessage(sameNumbers()),
    body('replaceNo')
-      .if(value => value)
+      .exists().withMessage(missingField(common['replaceNo']))
+      .if(value => value !== null)
       .isString().withMessage(invalidValue(common['replaceNo']))
       .isLength({ max : 20 }).withMessage(maxLength(common['replaceNo'], 20)),
    body('name')
-      .if(value => value)
+      .exists().withMessage(missingField(common['name']))
+      .if(value => value !== null)
       .isString().withMessage(invalidValue(common['name']))
       .isLength({ max : 50 }).withMessage(maxLength(common['name'], 50)),
    body('chName')
-      .if(value => value)
+      .exists().withMessage(missingField(common['chName']))
+      .if(value => value !== null)
       .isString().withMessage(invalidValue(common['chName']))
       .isLength({ max : 80 }).withMessage(maxLength(common['chName'], 80)),
    body('spName')
-      .if(value => value)
+      .exists().withMessage(missingField(common['spName']))
+      .if(value => value !== null)
       .isString().withMessage(invalidValue(common['spName']))
       .isLength({ max : 50 }).withMessage(maxLength(common['spName'], 50)),
    body('otherName')
-      .if(value => value)
+      .exists().withMessage(missingField(common['otherName']))
+      .if(value => value !== null)
       .isString().withMessage(invalidValue(common['otherName']))
       .isLength({ max : 50 }).withMessage(maxLength(common['otherName'], 50)),
 ]

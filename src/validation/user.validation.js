@@ -23,15 +23,18 @@ export default [
             .equals('C')
     ], invalidRole()),
     body('tel')
-        .if(value => value)
+        .exists().withMessage(missingField(common['tel']))
+        .if(value => value !== null)
         .isMobilePhone().withMessage(invalidPhone())
         .isLength({ max : 15}).withMessage(maxLength(common['tel'], 15)),
     body('position')
-        .if(value => value)
+        .exists().withMessage(missingField(common['position']))
+        .if(value => value !== null)
         .isString().withMessage(invalidValue(common['position']))
         .isLength({ max : 20 }).withMessage(maxLength(common['position'], 20)),
     body('area')
-        .if(value => value)
+        .exists().withMessage(missingField(common['area']))
+        .if(value => value !== null)
         .isString().withMessage(invalidValue(common['area']))
         .isLength({ max : 20 }).withMessage(maxLength(common['area'], 20)),
     body('email')
