@@ -12,7 +12,6 @@ import users from '../src/user/user.route';
 import vehicles from '../src/vehicle/vehicle.route';
 import groups from '../src/group/group.route';
 import componentParts from '../src/relationships/component-part/component-part.route';
-//import { expressValidator } from 'express-validator';
 
 // Exceptions
 import { handleError, ResourceNotFoundError } from '../src/exceptions/exceptions';
@@ -21,6 +20,19 @@ let app;
 let httpServer;
 
 export function initialize() {
+    /*
+    var whitelist = ['http://example.com']
+    var corsOptions = {
+      origin: function (origin, callback) {
+        if (whitelist.indexOf(origin) !== -1) {
+          callback(null, true)
+        } else {
+          callback(new Error('Not allowed by CORS'))
+        }
+      }
+    }
+    */
+
     return new Promise((resolve, reject) => {
         app = express();
         app.use(helmet());
