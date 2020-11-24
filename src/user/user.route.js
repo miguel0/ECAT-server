@@ -9,7 +9,7 @@ const router = express.Router();
 router.post('/', isAuthenticated(perms.add), validate, addUser);
 router.get('/', isAuthenticated(perms.getAll), getAllUsers);
 router.get('/:id', isAuthenticated(perms.get), getUser);
-router.put('/:id', isAuthenticated(perms.edit), editUser);
+router.put('/:id', isAuthenticated(perms.edit), validate, editUser);
 router.delete('/:id', isAuthenticated(perms.delete), deleteUser);
 
 export default router;

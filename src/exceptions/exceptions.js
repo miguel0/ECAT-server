@@ -1,16 +1,30 @@
 export function handleError(err, req, res, next) {
     if(err instanceof GeneralError) {
-        return res.status(err.code).json({
-            message: err.message
-        });
+        return errorBody(res, err.code, err.message);
     }
-    
-    //DEBUG ONLY
-    console.log(err);
 
-    return res.status(500).json({
-        message: "There was an internal server error."
-    });
+    if(err.name && err.name === 'EntityNotFound') {
+        return errorBody(res, 404, "Requested resource does not exist.");
+    }
+
+    //Firebase auth errors
+    if(err.code && err.code === 'auth/user-not-found') {
+        return errorBody(res, 404, "Requested resource does not exist.");
+    }
+
+    if(err.code && err.code === 'auth/email-already-exists') {
+        return errorBody(res, 400, "El email ingresado ya está en uso.");
+    }
+
+    //DB unique constraint violated.
+    if(err.errorNum && err.errorNum === 1) {
+        return errorBody(res, 400, "Value already exists.");
+    }
+
+    //DEBUG ONLY
+    console.log("too bad!", err);
+
+    return errorBody(res, 500, "There was an internal server error.");
     
 }
 
@@ -42,8 +56,14 @@ export class BadBodyError extends GeneralError {
     parseValidatorError(errors) {
         return errors[0].msg;
     }
+}
 
-    
+// Utility
+// Error body
+function errorBody(res, code, message) {
+    return res.status(code).json({
+        message: message
+    })
 }
 
 

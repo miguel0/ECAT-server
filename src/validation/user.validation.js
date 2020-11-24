@@ -1,4 +1,5 @@
 import { body, oneOf } from 'express-validator';
+import { invalidValue, maxLength, missingField } from './error-messages';
 
 const common = {
     name: "nombre",
@@ -11,9 +12,10 @@ const common = {
 
 export default [
     body('name')
-        .exists().withMessage(missingField('name'))
-        .isString().withMessage(invalidValue('name'))
-        .isLength({ max : 50 }).withMessage(maxLength('name', 50)),
+        .exists().withMessage(missingField(common['name']))
+        .isString().withMessage(invalidValue(common['name']))
+        .notEmpty().withMessage(invalidValue(common['name']))
+        .isLength({ max : 50 }).withMessage(maxLength(common['name'], 50)),
     oneOf([
         body('role')
             .equals('A'),
@@ -21,26 +23,21 @@ export default [
             .equals('C')
     ], invalidRole()),
     body('tel')
+        .if(value => value)
         .isMobilePhone().withMessage(invalidPhone())
-        .isLength({ max : 15}).withMessage(maxLength('tel', 15)),
+        .isLength({ max : 15}).withMessage(maxLength(common['tel'], 15)),
     body('position')
-        .isString().withMessage(invalidValue('position'))
-        .isLength({ max : 20 }).withMessage(maxLength('position', 20)),
+        .if(value => value)
+        .isString().withMessage(invalidValue(common['position']))
+        .isLength({ max : 20 }).withMessage(maxLength(common['position'], 20)),
     body('area')
-        .isString().withMessage(invalidValue('area'))
-        .isLength({ max : 20 }).withMessage(maxLength('area', 20)),
+        .if(value => value)
+        .isString().withMessage(invalidValue(common['area']))
+        .isLength({ max : 20 }).withMessage(maxLength(common['area'], 20)),
     body('email')
-        .exists().withMessage(missingField('email'))
+        .exists().withMessage(missingField(common['email']))
         .isEmail().withMessage(invalidEmail())
 ]
-
-function missingField(key) {
-    return `Campo faltante: '${common[key]}'`;
-}
-
-function invalidValue(key) {
-    return `Valor inválido para campo: '${common[key]}'`;
-}
 
 function invalidPhone() {
     return 'Número telefónico ingresado no es válido.';
@@ -48,10 +45,6 @@ function invalidPhone() {
 
 function invalidEmail() {
     return 'Email ingresado no es válido.';
-}
-
-function maxLength(key, length) {
-    return `Longitud inválida para '${common[key]}' (máximo ${length} caracteres)`;
 }
 
 function invalidRole() {

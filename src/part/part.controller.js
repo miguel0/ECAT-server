@@ -5,11 +5,17 @@ import { VehicleGroup } from '../relationships/vehicle-group/vehicle-group.entit
 import { Vehicle } from '../vehicle/vehicle.entity';
 import { Part } from './part.entity';
 import { validationResult } from 'express-validator';
+import { BadBodyError } from '../exceptions/exceptions';
 
-export async function getAllParts(req, res) {
-	const repo = getRepository(Part);
-	const parts = await repo.find();
-	res.send(parts);
+export async function getAllParts(req, res, next) {
+	try {
+		const repo = getRepository(Part);
+		const parts = await repo.find();
+		return res.send(parts);
+	} catch(err) {
+		next(err);
+	}
+	
 }
 
 export async function getPart(req, res, next) {
@@ -25,56 +31,31 @@ export async function getPart(req, res, next) {
 			.innerJoin(VehicleGroup, 'VG', 'GC.GRPID = VG.GRPID')
 			.innerJoin(Vehicle, 'V', 'VG.VEHICLEID = V.ID')
 			.where(`CP.PARTID = '${id}'`)
-			.getRawMany()
-		console.log(vehicles.length);
+			.getRawMany();
+
 		part.foundIn = vehicles;
-		res.send(part);
+		return res.send(part);
 	} catch(err) {
 		next(err);
 	}
 }
 
-export async function editPart(req, res) {
+export async function editPart(req, res, next) {
 	try {
+
+		const errors = validationResult(req);
+
+		if (!errors.isEmpty()) {
+			throw new BadBodyError(errors);
+			
+		}
+		
 		const id = req.params.id;
 		const repo = getRepository(Part);
 
 		const {replaceNo, name, chName, spName, otherName} = req.body;
 
-		/*if(replaceNo.length > 49){
-			res.status(400);
-			throw {
-				"message" : "Atributo 'replaceNo' excede el limite de caracteres"
-			};
-		}*/
-		
-		if(name.length > 49){
-			res.status(400);
-			throw {
-				"message" : "Atributo 'name' excede el limite de caracteres"
-			};
-		}
-
-		if(chName.length > 49){
-			res.status(400);
-			throw {
-				"message" : "Atributo 'chName' excede el limite de caracteres"
-			};
-		}
-
-		if(spName.length > 49){
-			res.status(400);
-			throw {
-				"message" : "Atributo 'spName' excede el limite de caracteres"
-			};
-		}
-
-		if(otherName.length > 49){
-			res.status(400);
-			throw {
-				"message" : "Atributo 'otherName' excede el limite de caracteres"
-			};
-		}
+		await repo.findOneOrFail(id);
 
 		await repo.update(id, {
 			replaceNo: replaceNo,
@@ -84,20 +65,20 @@ export async function editPart(req, res) {
 			otherName: otherName,
 		});
 
-		res.send(true);
+		return res.send(true);
+
 	} catch(err) {
-		res.send(err.message);
+		next(err);
 	}
 }
 
-export async function addPart(req, res) {
+export async function addPart(req, res, next) {
 	try {
 
 		const errors = validationResult(req);
 
 		if (!errors.isEmpty()) {
-			return res.status(400).json(errors.array());
-			
+			throw new BadBodyError(errors);
         }
 
 		const id = req.params.id;
@@ -114,8 +95,9 @@ export async function addPart(req, res) {
 			otherName: otherName,
 		});
 
-		res.send(true);
+		return res.send(true);
+
 	} catch(err) {
-		res.send(err.message);
+		next(err);
 	}
 }

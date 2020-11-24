@@ -4,7 +4,7 @@ import * as admin from 'firebase-admin';
 import { validationResult } from 'express-validator';
 import { BadBodyError, GeneralError } from '../exceptions/exceptions';
 
-export async function getAllUsers(req, res) {
+export async function getAllUsers(req, res, next) {
     try {
         const repo = getRepository(User);
         const users = await repo.find();
@@ -58,22 +58,25 @@ export async function addUser(req, res, next) {
 
         user.email = email;
 
-        res.send(true);
+        return res.send(true);
         
 
     } catch(err) {
-        if(err.codePrefix && err.codePrefix === 'auth') {
-            if(err.code === 'auth/email-already-exists')
-                err = new GeneralError('El email ingresado ya está en uso.');
-        }
         // TODO: delete user from firebase in case db insert fails.
-
         next(err);
     }
 }
 
-export async function editUser(req, res) {
+export async function editUser(req, res, next) {
     try {
+
+        const errors = validationResult(req);
+
+		if (!errors.isEmpty()) {
+			throw new BadBodyError(errors);
+			
+		}
+
         const id = req.params.id;
         const {name, role, tel, position, area, email} = req.body;
 
@@ -90,17 +93,16 @@ export async function editUser(req, res) {
             position: position,
             area: area
         });
+        
 
-        // TODO: returned user from insert is not the same format as
-        // if querying it with repo.find(). CHECK.
+        return res.send(true);
 
-        res.send(true);
     } catch(err) {
         next(err);
     }
 }
 
-export async function deleteUser(req, res) {
+export async function deleteUser(req, res, next) {
     try {
         const id = req.params.id;
 
@@ -110,11 +112,8 @@ export async function deleteUser(req, res) {
 
         let user = await repo.delete(id);
 
-        // TODO: returned user from insert is not the same format as
-        // if querying it with repo.find(). CHECK.
-
-        res.send(true);
+        return res.send(true);
     } catch(err) {
-        res.send(err.message);
+        next(err);
     }
 }
