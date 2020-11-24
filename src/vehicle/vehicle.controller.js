@@ -42,17 +42,34 @@ export async function addVehicle(req, res) {
 
 		const {name, spName, otherName, model, type, motorConfig, motorPower, transmission, groups} = req.body;
 
-		await repo.insert({
-			id: id,
-			name: name,
-			spName: spName,
-			otherName: otherName,
-			model: model,
-			type: type,
-			motorConfig: motorConfig,
-			motorPower: motorPower,
-			transmission: transmission
-		});
+		const exists = await repo.findOne(id);
+		if (exists) {
+			const vgRepo = getRepository(VehicleGroup);
+			await vgRepo.delete({ vehicleId: id });
+
+			await repo.update(id, {
+				name: name,
+				spName: spName,
+				otherName: otherName,
+				model: model,
+				type: type,
+				motorConfig: motorConfig,
+				motorPower: motorPower,
+				transmission: transmission
+			});
+		} else {
+			await repo.insert({
+				id: id,
+				name: name,
+				spName: spName,
+				otherName: otherName,
+				model: model,
+				type: type,
+				motorConfig: motorConfig,
+				motorPower: motorPower,
+				transmission: transmission
+			});
+		}
 
 		for (let i = 0; i < groups.length; i++) {
 			await addGroup(id, groups[i]);
