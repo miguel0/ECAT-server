@@ -1,28 +1,28 @@
-import { tmpdir } from "os";
 import { getRepository } from "typeorm";
 import { Component } from "./component.entity";
+import { validationResult } from 'express-validator';
+import { BadBodyError } from "../exceptions/exceptions";
 
-export async function getAllComponents(req, res) {
+export async function getAllComponents(req, res, next) {
 	try {
 		const repo = getRepository(Component);
 		const components = await repo.find();
-		res.send(components);
+		return res.send(components);
 	} catch(err) {
-		console.log(err.message);
+		next(err);
 	}
-	
 }
 
-export async function getComponent(req, res) {
+export async function getComponent(req, res, next) {
 	try {
 		let id = req.params.id;
 		const repo = getRepository(Component);
 		const component = await repo.findOneOrFail({id: id}, {relations: ['componentParts', 'componentParts.part']});
 		component.parts = getPrettyParts(component.componentParts);
 		component.componentParts = undefined;
-		res.send(component);
+		return res.send(component);
 	} catch(err) {
-		console.log(err.message);
+		next(err);
 	}
 	
 }
@@ -62,12 +62,22 @@ function getLocalNo(cp, list, localNo) {
 	}
 }
 
-export async function editComponent(req, res) {
+export async function editComponent(req, res, next) {
 	try {
+
+		const errors = validationResult(req);
+
+		if (!errors.isEmpty()) {
+			throw new BadBodyError(errors);
+			
+		}
+
 		const id = req.params.id;
 		const repo = getRepository(Component);
 
 		const {name, chName, spName, otherName} = req.body;
+
+		await repo.findOneOrFail(id);
 
 		await repo.update(id, {
 			name: name,
@@ -76,8 +86,9 @@ export async function editComponent(req, res) {
 			otherName: otherName,
 		});
 
-		res.send(true);
+		return res.send(true);
+
 	} catch(err) {
-		res.send(err.message);
+		next(err);
 	}
 }

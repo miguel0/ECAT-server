@@ -1,4 +1,3 @@
-//vechicle.controller.js
 import { getRepository } from 'typeorm';
 import { Vehicle } from './vehicle.entity';
 import { VehicleGroup } from '../relationships/vehicle-group/vehicle-group.entity';
@@ -7,29 +6,29 @@ import { GroupComponent } from '../relationships/group-component/group-component
 import { Component } from '../component/component.entity';
 import { ComponentPart } from '../relationships/component-part/component-part.entity';
 import { Part } from '../part/part.entity';
+import { validationResult } from 'express-validator';
+import { BadBodyError } from '../exceptions/exceptions';
 
-export async function getVehicle(req, res) {
+export async function getVehicle(req, res, next) {
     try {
-        //return res.status(400).json({message: "Something happened..."});
         let id = req.params.id;
         const repo = getRepository(Vehicle);
         const vehicle = await repo.findOneOrFail({id: id}, {relations: ['vehicleGroups', 'vehicleGroups.group']});
         vehicle.groups = getPrettyGroups(vehicle.vehicleGroups);
         vehicle.vehicleGroups = undefined;
-        res.send(vehicle);
+        return res.send(vehicle);
     } catch(err) {
-        res.end(err.message);
+        next(err);
     }
-    
 }
 
-export async function getAllVehicles(req, res) {
+export async function getAllVehicles(req, res, next) {
     try {
         const repo = getRepository(Vehicle);
         const vehicles = await repo.find();
-        res.send(vehicles);
+        return res.send(vehicles);
     } catch(err) {
-        res.end(err.message);
+        next(err);
     }
 }
 
@@ -83,12 +82,20 @@ export async function addVehicle(req, res) {
 	}
 }
 
-export async function editVehicle(req, res) {
+export async function editVehicle(req, res, next) {
 	try {
-		const id = req.params.id;
-		const repo = getRepository(Vehicle);
+        const errors = validationResult(req);
 
-		const {name, spName, otherName, model, type, motorConfig, motorPower, transmission} = req.body;
+		if (!errors.isEmpty()) {
+			throw new BadBodyError(errors);
+        }
+
+		const id = req.params.id;
+        const repo = getRepository(Vehicle);
+
+        const {name, spName, otherName, model, type, motorConfig, motorPower, transmission} = req.body;
+        
+        await repo.findOneOrFail(id);
 
 		await repo.update(id, {
             name: name,
@@ -100,10 +107,10 @@ export async function editVehicle(req, res) {
             motorPower: motorPower,
             transmission: transmission
 		});
-
-		res.send(true);
+        
+		return res.send(true);
 	} catch(err) {
-		res.send(err.message);
+		next(err);
 	}
 }
 
@@ -111,9 +118,13 @@ function getPrettyGroups(vehicleGroups) {
     let groups = [];
     let temp = {};
     vehicleGroups.forEach(vg => {
-        temp = vg.group;
-        temp.localNo = vg.localNo;
-        groups.push(temp);
+        if(vg) {
+            temp = vg.group;
+            if(temp) {
+                temp.localNo = vg.localNo;
+                groups.push(temp);
+            }
+        }
         temp = {};
     });
     return groups;
