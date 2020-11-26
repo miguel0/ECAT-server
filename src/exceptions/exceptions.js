@@ -3,6 +3,10 @@ export function handleError(err, req, res, next) {
         return errorBody(res, err.code, err.message);
     }
 
+    if(err instanceof SyntaxError) {
+        return errorBody(res, 400, "Body syntax error.");
+    }
+
     if(err.name && err.name === 'EntityNotFound') {
         return errorBody(res, 404, "Requested resource does not exist.");
     }
