@@ -38,7 +38,9 @@ export function initialize() {
         app.use(helmet());
         app.use(cors({origin: process.env.FRONTEND_ORIGIN}));
         app.use(morgan('combined'));
-        app.use(express.json());
+		app.use(express.json({limit: '10mb'}));
+		app.use(express.urlencoded({limit: '10mb', extended: true}));
+
         httpServer = http.createServer(app);
         registerRoutes();
         httpServer.listen(config)

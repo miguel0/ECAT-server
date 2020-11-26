@@ -97,6 +97,3 @@ function inherit(role, parent) {
 loadSchema();
 
 export default baseSchema;
-
-
-
