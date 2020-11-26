@@ -93,7 +93,7 @@ export async function editVehicle(req, res, next) {
 		const id = req.params.id;
         const repo = getRepository(Vehicle);
 
-        const {name, spName, otherName, model, type, motorConfig, motorPower, transmission} = req.body;
+        const {name, spName, otherName, model, type, motorConfig, motorPower, transmission, imageURL} = req.body;
         
         await repo.findOneOrFail(id);
 
@@ -105,7 +105,8 @@ export async function editVehicle(req, res, next) {
             type: type,
             motorConfig: motorConfig,
             motorPower: motorPower,
-            transmission: transmission
+			transmission: transmission,
+			imageURL: imageURL
 		});
         
 		return res.send(true);
