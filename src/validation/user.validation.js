@@ -24,7 +24,7 @@ export default [
     ], invalidRole()),
     body('tel')
         .exists().withMessage(missingField(common['tel']))
-        .if(value => value !== null)
+        .if(value => (value !== null && value !== ''))
         .isMobilePhone().withMessage(invalidPhone())
         .isLength({ max : 15}).withMessage(maxLength(common['tel'], 15)),
     body('position')
