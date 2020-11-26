@@ -26,7 +26,7 @@ export function handleError(err, req, res, next) {
     }
 
     //DEBUG ONLY
-    console.log("too bad!", err);
+    //console.log("too bad!", err);
 
     return errorBody(res, 500, "There was an internal server error.");
     
