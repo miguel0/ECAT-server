@@ -45,6 +45,12 @@ export default [
       .if(value => value !== null)
       .isString().withMessage(invalidValue(common['otherName']))
       .isLength({ max : 50 }).withMessage(maxLength(common['otherName'], 50)),
+   body('imageURL')
+      .exists().withMessage(missingField('URL de imagen'))
+      .if(value => (value !== null && value !== ''))
+      .isString().withMessage(invalidValue('URL de imagen'))
+      .isLength({max: 200}).withMessage(maxLength('URL de imagen', 200))
+      .isURL().withMessage(invalidValue('URL de imagen'))
 ]
 
 function sameNumbers() {

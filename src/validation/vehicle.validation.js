@@ -1,5 +1,5 @@
 import { body, param, oneOf } from 'express-validator';
-import { missingField, invalidValue } from './error-messages';
+import { missingField, invalidValue, maxLength } from './error-messages';
 
 export default [
     param('id')
@@ -63,5 +63,11 @@ export default [
         body('transmission')
             .equals('ZF')    
     ], 'Transmisión faltante o inválida. Debe ser "AL", "HW" o "ZF".'),
+    body('imageURL')
+        .exists().withMessage(missingField('URL de imagen'))
+        .if(value => (value !== null && value !== ''))
+        .isString().withMessage(invalidValue('URL de imagen'))
+        .isLength({max: 200}).withMessage(maxLength('URL de imagen', 200))
+        .isURL().withMessage(invalidValue('URL de imagen'))
     
     ]  
