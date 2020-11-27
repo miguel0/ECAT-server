@@ -1,6 +1,6 @@
 # ECAT-server
 
-REST API backend for e-catalog web application. Made with [NodeJS](https://nodejs.org) and the [Express](https://expressjs.com/) web framework. Authentication is managed with [Firebase Admin SDK](https://firebase.google.com/docs/admin/setup)
+REST API backend for e-catalog web application. Made with [NodeJS](https://nodejs.org) and the [Express](https://expressjs.com/) web framework. Authentication is managed with [Firebase Admin SDK](https://firebase.google.com/docs/admin/setup). [TypeORM](https://typeorm.io) is used to manage database actions in an easy way. 
 
 ### Run the project
 
