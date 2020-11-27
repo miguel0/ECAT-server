@@ -1,32 +1,41 @@
 import {getRepository} from 'typeorm';
 import { User } from './user.entity';
 import * as admin from 'firebase-admin';
+import { validationResult } from 'express-validator';
+import { BadBodyError, GeneralError } from '../exceptions/exceptions';
 
-export async function getAllUsers(req, res) {
+export async function getAllUsers(req, res, next) {
     try {
         const repo = getRepository(User);
         const users = await repo.find();
-        res.send(users);
+        return res.send(users);
     } catch(err) {
-        res.send(err.message);
+        next(err);
     }
 }
 
-export async function getUser(req, res) {
+export async function getUser(req, res, next) {
     try {
         let id = req.params.id;
         let firebaseUser = await admin.auth().getUser(id);
         const repo = getRepository(User);
         const user = await repo.findOneOrFail(id);
         user.email = firebaseUser.email;
-        res.send(user);
+        return res.send(user);
     } catch(err) {
-        res.send(err.message);
+        next(err);
     }
 }
 
-export async function addUser(req, res) {
+export async function addUser(req, res, next) {
     try {
+
+        const errors = validationResult(req);
+
+        if (!errors.isEmpty())
+            throw new BadBodyError(errors);
+        
+
         const {name, role, 
             tel, position, 
             area, email, password} = req.body;
@@ -47,22 +56,27 @@ export async function addUser(req, res) {
             area: area
         });
 
-        // TODO: returned user from insert is not the same format as
-        // if querying it with repo.find(). CHECK.
         user.email = email;
 
-        res.send(true);
+        return res.send(true);
         
 
     } catch(err) {
-        res.send(err.message);
-        // TODO: any error (db or firebase) should drop created user
-        // on either platform.
+        // TODO: delete user from firebase in case db insert fails.
+        next(err);
     }
 }
 
-export async function editUser(req, res) {
+export async function editUser(req, res, next) {
     try {
+
+        const errors = validationResult(req);
+
+		if (!errors.isEmpty()) {
+			throw new BadBodyError(errors);
+			
+		}
+
         const id = req.params.id;
         const {name, role, tel, position, area, email} = req.body;
 
@@ -79,17 +93,16 @@ export async function editUser(req, res) {
             position: position,
             area: area
         });
+        
 
-        // TODO: returned user from insert is not the same format as
-        // if querying it with repo.find(). CHECK.
+        return res.send(true);
 
-        res.send(true);
     } catch(err) {
-        res.send(err.message);
+        next(err);
     }
 }
 
-export async function deleteUser(req, res) {
+export async function deleteUser(req, res, next) {
     try {
         const id = req.params.id;
 
@@ -99,11 +112,8 @@ export async function deleteUser(req, res) {
 
         let user = await repo.delete(id);
 
-        // TODO: returned user from insert is not the same format as
-        // if querying it with repo.find(). CHECK.
-
-        res.send(true);
+        return res.send(true);
     } catch(err) {
-        res.send(err.message);
+        next(err);
     }
 }

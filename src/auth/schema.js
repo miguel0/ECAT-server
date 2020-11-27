@@ -17,12 +17,16 @@ let baseSchema = {
                         return bearer.id === params.id;
                     }
                 ] 
-			},
+            },
+            // Components
 			[components.getAll]: {},
-			[components.get]: {},
-			[groups.get]: {},
+            [components.get]: {},
+            // Groups
+            [groups.get]: {},
+            // Parts
 			[parts.getAll]: {},
-			[parts.get]: {},
+            [parts.get]: {},
+            // Vehicles
 			[vehicles.getAll]: {},
 			[vehicles.get]: {}
         },
@@ -31,6 +35,7 @@ let baseSchema = {
         name: 'admin',
         extends: 'C',
         permissions: {
+            // Users
             [users.get]: {
                 policies: [
                     // Admin can access any user resource.
@@ -42,14 +47,21 @@ let baseSchema = {
 			[users.getAll]: {},
 			[users.add]: {},
 			[users.edit]: {},
-			[users.delete]: {},
-			[components.edit]: {},
-			[groups.edit]: {},
+            [users.delete]: {},
+            //Components
+            [components.edit]: {},
+            // Groups
+            [groups.edit]: {},
+            // Parts
 			[parts.add]: {},
-			[parts.edit]: {},
+            [parts.edit]: {},
+            // Vehicles
 			[vehicles.add]: {},
-			[vehicles.edit]: {},
-			[compPart.delete]: {}
+            [vehicles.edit]: {},
+            // Component-Part
+			[compPart.delete]: {},
+			[compPart.get]: {},
+			[compPart.edit]: {}
         }
     }
 }
@@ -95,6 +107,3 @@ function inherit(role, parent) {
 loadSchema();
 
 export default baseSchema;
-
-
-
